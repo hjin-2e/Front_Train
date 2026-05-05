@@ -1,0 +1,449 @@
+/* ====================================================================================================
+   공통
+==================================================================================================== */
+
+body {
+  letter-spacing: -1px;
+  color: #353434;
+  font-size: 62.5%;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+section.sub{
+  padding:80px 0 0;
+}
+
+#container {
+  height:100%;
+}
+
+/* .main-body {height:100%;min-width:900px\0/!important;overflow:hidden;} */
+
+.main-body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  background: #FFF;
+}
+
+.bg-gray {
+  background: #f1f3f6;
+}
+
+.bg-gray2 {
+  background:#eee;
+}
+
+.bg-sky {
+  background: #ebf3ff;
+}
+
+.bg-red {
+  background: #ff0000 !important;
+}
+
+.inBox {
+  width: 100%;
+  max-width: 1000px;
+  margin: 45px auto 0;
+}
+
+.inner {
+  max-width: 1400px;
+  margin: 0 auto
+}
+
+.txt-gray {
+  color: #959595;
+}
+
+.add-bottom {
+  font-size: 2.8rem;
+  color: #262626;
+  font-weight: 700;
+}
+
+.center {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.tal {
+  text-align:left;
+  padding-left:10px !important;
+}
+
+.box-horizon {
+  overflow-x: auto;
+  padding-bottom: 10px;
+
+  .in-horizon {
+    min-width: 590px;
+
+    &.no-2 {
+      min-width: 800px;
+    }
+  }
+}
+
+#clock {
+  color: #1d7de7;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.txt-bottom {
+  font-size: 1.5rem;
+  margin-top: 10px;
+  color: #aaa;
+}
+
+.h2 {
+  height: 63px;
+}
+
+.b-n {
+  border:none !important;
+}
+.b-b-n {
+  border-bottom:none !important;
+}
+
+.header-inner, .cont-inner {
+    position: relative;
+    margin: 0 auto;
+    padding-left: calc((100% - 1400px) / 2);
+    padding-right: calc((100% - 1400px) / 2);
+  }
+
+/* ====================================================================================================
+   헤더
+==================================================================================================== */
+header {
+  width: 100%;
+}
+
+.header-wrap {
+  .header-top {
+    position: relative;
+    display: flex;
+    justify-content:space-between;
+    padding: 0 30px;
+    color:#111;
+    background-color: #FFF;
+    & ul {
+      display: flex;
+      li {
+        padding:12px 0;
+        line-height: 1;
+        text-align: center;
+        font-size: 16px;
+      }
+    }
+    .top-menu {
+        li {
+          min-width: 114px;
+          border-left: 1px solid #cccccc;
+          border-right: 1px solid #cccccc;
+        }
+        li.on {
+          color: #FFF;
+          font-weight: 700;
+          background-color: #078eb9;
+        }
+    }
+    .header-info {
+      .hd-info-list {
+        li {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+      }
+    }
+  }
+  .header-nav {
+    z-index: 5;
+    position: absolute;
+    width: 100%;
+    height: 100px;
+    padding:0 30px;
+    background: rgba(0,0,0,0.5);
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      flex-flow: row nowrap;
+      height: 100%;
+      .logo {
+        display: flex;
+        align-items: center;
+        a {
+          display: inline-block;
+          width: auto;
+          height: 30px;
+          background-color:transparent;
+          background-size: auto 100%;
+          background-position: 0 0;
+        }
+      }
+      nav {
+          width: 100%;
+          height: 100%;
+          .gnb_depth1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            & li {
+              padding: 0 30px;
+              color: #FFF;
+              font-size:21px;
+              font-weight: 700;
+              a {
+
+              }
+              & a:hover {
+                color:#078eb9;
+                border-color: #078eb9;
+              }
+              .gnb_depth2_item {
+                position: absolute;
+                left: 0;
+                top: 100px;
+                width: 100%;
+                height: auto;
+                overflow: auto;
+                background-color: white;
+                display: none;
+                box-shadow: 0 24px 24px -24px rgba(0, 0, 0, 0.5);
+                .gnb_depth2_inner {
+                  position: relative;
+                  width: 100%;
+                  max-width: 1400px;
+                  padding:30px 0 0 200px;
+                  margin:0 auto;
+                  box-sizing: border-box;
+                  .sgnb_title_txt {
+                    position: absolute;
+                    left: 0;
+                    top: 32px;
+                    width: 100%;
+                    text-align: left;
+                    .title {
+                      display: block;
+                      color: #FFF;
+                      font-size: 22px;
+                      font-weight: 700;
+                      line-height: 1.2;
+                      word-break: keep-all;
+                    }
+                  }
+                  .gnb_depth2_list {
+                    position: relative;
+                    ul {
+                      padding-left: 30px;
+                      li {
+                        float: left;
+                        position: relative;
+                        text-align: left;
+                        padding: 0 15px;
+                        width: 20%;
+                        margin-bottom: 35px;
+                        min-height: 50px;
+                        box-sizing: border-box;
+                        word-break: keep-all;
+                        a {
+                          color: #111;
+                          font-size: 20px;
+                          font-weight: 700;
+                        }
+                        .gnb_dep3_list {
+                            li {
+                              position: relative;
+                              margin-top: 10px;
+                              a {
+                                color: #111;
+                                font-size: 17px;
+                                font-weight: 400;
+                                transition: all 0.35s ease-out;
+                              }
+                            }
+                          }
+                      }
+                    }
+                  }
+                }
+                .gnb_bg::before {
+                  content: '';
+                  position: absolute;
+                  top:0;
+                  left: 0;
+                  display: block;
+                  width: calc((100% - 1400px) / 2 + 200px);
+                  height: auto;
+                  background-color: #078eb9;
+                  background-image: none;
+                  background-size: cover;
+                }
+              }
+            }
+          }
+        }
+        .util-wrap {
+          .btn-allmenu {
+            width:24px;
+            height: 18px;
+            background: url("/src/assets/img/icon_common/ham_icon.svg") no-repeat;
+            &:hover {
+              background: url("/src/assets/img/icon_common/scrolled_ham_icon.svg") no-repeat;
+            }
+          }
+        }
+    }
+    &.current {
+      background:#FFF;
+      .gnb {
+        li {
+          color: #111;
+        }
+      }
+    }
+  }
+}
+
+/* ====================================================================================================
+   푸터
+==================================================================================================== */
+
+footer {
+  background-color: #343c45;
+  .inner {
+    position: relative;
+  }
+}
+
+.footer-wrap {
+  position: relative;
+  .ft-info-wrap {
+    border-bottom: 1px solid #595e68;
+    .ft-info {
+      display: flex;
+      padding:28px 0;
+      li {
+        a {
+        color: #FFF;
+        font-size: 14px;
+        line-height: 1;
+        padding-right:22px;
+          &::after {
+            content: '';
+            position: relative;
+            display: inline-block;
+            left: 10px;
+            bottom:3px;
+            width:3px;
+            height: 3px;
+            background-color: #FFF;
+          }
+        }
+        &:last-child > a::after {
+          display: none;
+        }
+        &.privacy > a {
+          color:#89b8f5;
+        }
+      }
+    }
+    .ft_sns_share {
+      position: absolute;
+      top: 20px;
+      right: 0;
+      .ft_sns_list {
+        display: flex;
+        align-items: center;
+        li {
+          margin-left: 15px;
+        }
+      }
+    }
+  }
+  .ft-site-area {
+    .ft-site-info {
+      padding: 35px 0 55px;
+      .ft-info-list {
+        padding-bottom:7px;
+        ol {
+            display: flex;
+          li {
+            color: #c1c3c7;
+            font-size: 14px;
+            padding-right:16px;
+            &::after {
+              content: '';
+              position: relative;
+              left: 8px;
+              display: inline-block;
+              width: 1px;
+              height: 13px;
+              background-color: #6f737b;
+            }
+            &:last-child::after {
+              display: none;
+            }
+          }
+        }
+      }
+      .copyright {
+        color: #c1c3c7;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+
+/* ====================================================================================================
+   로고
+==================================================================================================== */
+h1.logo > a {
+  aspect-ratio: 211 / 30;
+  background: url(/src/assets/img/logos/ticket/type=ticket.svg);
+}
+
+/* ====================================================================================================
+   버튼
+==================================================================================================== */
+
+
+
+/* ====================================================================================================
+   컨텐츠 공통
+==================================================================================================== */
+.write-wrap {
+  position: relative;
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-flow: row nowrap;
+  gap: 8px;
+  width: auto;
+  .btn_pop {
+    display: block;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-position: right 8px center;
+    background-size: auto 24px;
+    border: 1px solid transparent;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    height: 100% !important;
+    flex-basis: 100% !important;
+    border-bottom-color: #bbbbbb;
+  }
+}

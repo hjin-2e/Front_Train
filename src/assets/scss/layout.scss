@@ -1,0 +1,298 @@
+/* ==================================================
+    메인
+================================================== */
+.main-visual {
+    position: relative;
+    overflow: hidden;
+}
+
+// 승차권 간편예매
+.ticket-box {
+    position: absolute;
+    width: 100%;
+    bottom:0;
+    background: rgba(7,142,185,0.85);
+    .ticket-wrap {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 1400px;
+        height: 120px;
+        margin:0 auto;
+        flex-flow: row nowrap;
+        > div {
+            padding-right: 24px;
+        }
+        & {
+            label {
+                color: #fff;
+                font-size: 16px;
+            }
+            .write-wrap {
+                width: 100%;
+                input {
+                    color:#FFF;
+                    font-size: 20px;
+                    font-weight: 500;
+                    width: 100%;
+                    padding: 8px 8px 8px 0;
+                    border-bottom: 1px solid #FFF;
+                    background-color: transparent;
+                }
+                a {
+                    background-position: right 8px center;
+                    background-repeat: no-repeat;
+                    left: 0;
+                    border-bottom: 1px solid #fff;
+                }
+            }
+        }
+        .start {
+            a {
+                background-image: url("/src/assets/img/img_add_on/ico_airplane_svg_white.svg");
+            }
+        }
+        .end {
+            a {
+                background-image: url("/src/assets/img/img_add_on/ico_map_svg_white.svg");
+            }
+        }
+        .day_start {
+            a {
+                background-image: url("/src/assets/img/img_add_on/ico_calendar_svg_white.svg");
+            }
+        }
+        .total {
+            a {
+                background-image: url("/src/assets/img/img_add_on/ico_pp_svg_white.svg");
+            }
+        }
+        .btn_lookup {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width:170px;
+            color: #078eb9 !important;
+            font-size: 18px;
+            font-weight:700;
+            line-height: 1;
+            padding: 16px 0;
+            border-radius: 50px;
+            background-color:#FFF;
+        }
+    }
+}
+
+// 컨텐츠 영역
+.contents-wrap {
+    position: relative;
+    padding-top:50px;
+    .tit {
+        color:111;
+        font-size: 28px;
+        font-weight: 400;
+        text-align: center;
+        strong {
+            font-weight: bold;
+        }
+    }
+    .slideSwiper {
+        margin: 30px auto 0;
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height:198px;
+            border-radius: 24px;
+            border: 1px solid #cccccc;
+            a {
+                color:#078eb9;
+                font-size: 24px;
+                font-weight: 700;
+                line-height: 1;
+            }
+        }
+    }
+    .imgbox {
+        position: relative;
+        & > div {
+          display: flex;
+          max-width: 1400px;
+          margin: 50px auto 0 auto;
+          &::before {
+            content: "";
+            display: block;
+            width: 50%;
+            height: 100%;
+            background: #0d2e5a;
+            position: absolute;
+            top: 0;
+            left: 0;
+            max-height: 415px;
+            z-index: -1;
+          }
+          &::after {
+            content: "";
+            display: block;
+            width: 50%;
+            height: 100%;
+            background: #0054a6;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            max-height: 415px;
+            z-index: -1;
+          }
+        }
+    }
+
+    .grid_wrap {
+      position: relative;
+      background-color: #e5edf1;
+      .grid_box {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 48px 0;
+        .title {
+          font-size: 28px;
+          font-weight: 700;
+          padding-bottom: 30px;
+        }
+        ul {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+          gap: 24px;
+          li {
+            a {
+              text-align: center;
+              display: flex;
+              flex-flow: column nowrap;
+              justify-content: center;
+              align-items: center;
+              gap: 8px;
+              .s_tit {
+                color: 111;
+                font-size: 20px;
+                font-weight: 700;
+              }
+              .icoWrap {
+                display: block;
+                border-radius: 100%;
+                position: relative;
+                background-color: #FFF;
+                border: 1px solid #ccc;
+                width: 100%;
+                max-width: 172px;
+                &::before {
+                  display: inline-block;
+                  content: "";
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  background-size: 100%;
+                  width: 64px;
+                  height: 64px;
+                }
+                &::after {
+                  display: inline-block;
+                  content: "";
+                  padding-top: 100%;
+                  box-sizing: border-box;
+                }
+                &:hover {
+                  border: 2px solid #078eb9;
+                }
+              }
+            }
+            &:nth-of-type(1) {
+              .icoWrap:before {
+                background-image: url("/src/assets/img/img_add_on/ticket_main_icon_ticket_skyblue.png");
+              }
+            }
+            &:nth-of-type(2) {
+              .icoWrap:before {
+                background-image: url("/src/assets/img/img_add_on/ticket_main_icon_bus_skyblue.png");
+              }
+            }
+            &:nth-of-type(3) {
+              .icoWrap:before {
+                background-image: url("/src/assets/img/img_add_on/ticket_main_icon_discount_skyblue.png");
+              }
+            }
+            &:nth-of-type(4) {
+              .icoWrap:before {
+                background-image: url("/src/assets/img/img_add_on/ticket_main_icon_lostitem_skyblue.png");
+              }
+            }
+            &:nth-of-type(5) {
+              .icoWrap:before {
+                background-image: url("/src/assets/img/img_add_on/ticket_main_icon_promotion_skyblue.png");
+              }
+            }
+            &:last-child{
+              .icoWrap:before {
+                background-image: url("/src/assets/img/img_add_on/ticket_main_icon_timetable_skyblue.png");
+              }
+            }
+          }
+        }
+      }
+    }
+}
+
+// 공지사항 영역
+.notice-wrap {
+    position: relative;
+    padding: 50px 0 80px;
+    .notice-head {
+        display: flex;
+        align-items:center;
+        border-bottom: 2px solid #555;
+        h4 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+    }
+    .notice-list {
+      display: grid;
+      row-gap:16px;
+      column-gap: 30px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding-top: 24px;
+      li {
+        a {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .s-tit {
+              color:#111;
+              font-size:20px;
+          }
+          .data {
+              color:#555;
+              font-size:15px;
+          }
+        }
+      }
+    }
+}
+
+/* ==================================================
+    로그인
+================================================== */
+
+
+
+/* ==================================================
+    좌석 예약
+================================================== */
+
+
+
+/* ==================================================
+    결제
+================================================== */
+
+
+
