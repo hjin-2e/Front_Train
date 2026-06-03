@@ -1,6 +1,10 @@
 /* ====================================================================================================
    공통
 ==================================================================================================== */
+:root {
+  --white-color:#FFF;
+  --black-color: #111;
+}
 
 body {
   letter-spacing: -1px;
@@ -28,7 +32,7 @@ section.sub{
   align-items: center;
   justify-content: center;
   height: 70vh;
-  background: #FFF;
+  background: var(--white-color);
 }
 
 .bg-gray {
@@ -135,7 +139,7 @@ header {
     justify-content:space-between;
     padding: 0 30px;
     color:#111;
-    background-color: #FFF;
+    background-color: var(--white-color);
     & ul {
       display: flex;
       li {
@@ -200,7 +204,7 @@ header {
             height: 100%;
             & li {
               padding: 0 30px;
-              color: #FFF;
+              color: var(--white-color);
               font-size:21px;
               font-weight: 700;
               a {
@@ -212,14 +216,26 @@ header {
               }
               .gnb_depth2_item {
                 position: absolute;
-                left: 0;
+                left: -30px;
                 top: 100px;
-                width: 100%;
+                width: calc(100% + 60px);
                 height: auto;
                 overflow: auto;
-                background-color: white;
-                display: none;
+                background-color: var(--white-color);
+                display: block;
+                // max-height: 0;
+                // opacity: 0;
+                // visibility: hidden;
+                // overflow: hidden;
+                // transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s;
+                // z-index: 999;
                 box-shadow: 0 24px 24px -24px rgba(0, 0, 0, 0.5);
+                &.active {
+                  display: block;
+                  max-height: 450px;
+                  opacity: 1;
+                  visibility: visible;
+                }
                 .gnb_depth2_inner {
                   position: relative;
                   width: 100%;
@@ -235,11 +251,12 @@ header {
                     text-align: left;
                     .title {
                       display: block;
-                      color: #FFF;
+                      color: var(--white-color);
                       font-size: 22px;
                       font-weight: 700;
                       line-height: 1.2;
                       word-break: keep-all;
+                      text-transform: capitalize;
                     }
                   }
                   .gnb_depth2_list {
@@ -257,22 +274,24 @@ header {
                         box-sizing: border-box;
                         word-break: keep-all;
                         a {
-                          color: #111;
+                          color: var(--black-color);
                           font-size: 20px;
                           font-weight: 700;
                         }
                         .gnb_dep3_list {
+                          ul {
                             li {
                               position: relative;
                               margin-top: 10px;
                               a {
-                                color: #111;
+                                color: var(--black-color);
                                 font-size: 17px;
                                 font-weight: 400;
                                 transition: all 0.35s ease-out;
                               }
                             }
                           }
+                        }
                       }
                     }
                   }
@@ -284,7 +303,7 @@ header {
                   left: 0;
                   display: block;
                   width: calc((100% - 1400px) / 2 + 200px);
-                  height: auto;
+                  height: 100%;
                   background-color: #078eb9;
                   background-image: none;
                   background-size: cover;
@@ -305,10 +324,10 @@ header {
         }
     }
     &.current {
-      background:#FFF;
+      background:var(--white-color);
       .gnb {
         li {
-          color: #111;
+          color: var(--black-color);
         }
       }
     }
@@ -335,7 +354,7 @@ footer {
       padding:28px 0;
       li {
         a {
-        color: #FFF;
+        color: var(--white-color);
         font-size: 14px;
         line-height: 1;
         padding-right:22px;
@@ -347,7 +366,7 @@ footer {
             bottom:3px;
             width:3px;
             height: 3px;
-            background-color: #FFF;
+            background-color: var(--white-color);
           }
         }
         &:last-child > a::after {
