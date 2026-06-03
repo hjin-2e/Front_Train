@@ -202,7 +202,7 @@ header {
             justify-content: center;
             align-items: center;
             height: 100%;
-            & li {
+            > li {
               padding: 0 30px;
               color: var(--white-color);
               font-size:21px;
@@ -222,13 +222,7 @@ header {
                 height: auto;
                 overflow: auto;
                 background-color: var(--white-color);
-                display: block;
-                // max-height: 0;
-                // opacity: 0;
-                // visibility: hidden;
-                // overflow: hidden;
-                // transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s;
-                // z-index: 999;
+                display: none;
                 box-shadow: 0 24px 24px -24px rgba(0, 0, 0, 0.5);
                 &.active {
                   display: block;
@@ -261,9 +255,9 @@ header {
                   }
                   .gnb_depth2_list {
                     position: relative;
-                    ul {
+                    > ul {
                       padding-left: 30px;
-                      li {
+                      > li {
                         float: left;
                         position: relative;
                         text-align: left;
@@ -273,21 +267,25 @@ header {
                         min-height: 50px;
                         box-sizing: border-box;
                         word-break: keep-all;
-                        a {
+                        > a {
                           color: var(--black-color);
                           font-size: 20px;
                           font-weight: 700;
                         }
                         .gnb_dep3_list {
-                          ul {
-                            li {
+                          > ul {
+                            > li {
                               position: relative;
                               margin-top: 10px;
-                              a {
+                              line-height: 1.2;
+                              > a {
                                 color: var(--black-color);
                                 font-size: 17px;
                                 font-weight: 400;
                                 transition: all 0.35s ease-out;
+                                &:hover {
+                                  color: #0054a6;
+                                }
                               }
                             }
                           }

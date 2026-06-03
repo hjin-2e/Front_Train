@@ -5,6 +5,12 @@ import { useState } from "react";
 const Header = () => {
   const [activeMenu, setActiveMenu] = useState(null);
 
+  const handleMenuClick = (e, menuIndex) => {
+    e.preventDefault(); 
+    
+    setActiveMenu((prev) => (prev === menuIndex ? null : menuIndex));
+  };
+
   return (
     <header id="header">
         <div className="header-wrap">
@@ -33,9 +39,8 @@ const Header = () => {
                     <h1 className="logo"><a href="#none" aria-label="코레일 승차권예매 메인페이지로 이동"></a></h1>
                     <nav>
                         <ul className="gnb_depth1">
-                          <li onMouseEnter={() => setActiveMenu(0)} 
-                            onMouseLeave={() => setActiveMenu(null)}>
-                            <a href="">승차권</a>
+                          <li>
+                            <a href="" onClick={(e) => handleMenuClick(e, 0)}>승차권</a>
                             <div className={`gnb_depth2_item gnb_depth2_item1 ${activeMenu === 0 ? "active" : ""}`}>
                               <div className="gnb_bg">
                                 <div className="gnb_depth2_inner">
@@ -103,9 +108,8 @@ const Header = () => {
                               </div>
                             </div>
                           </li>
-                          <li onMouseEnter={() => setActiveMenu(1)} 
-                              onMouseLeave={() => setActiveMenu(null)}>
-                              <a href="">철도역·열차</a>
+                          <li>
+                              <a href="" onClick={(e) => handleMenuClick(e, 1)}>철도역·열차</a>
                             <div className={`gnb_depth2_item gnb_depth2_item1 ${activeMenu === 1 ? "active" : ""}`}>
                               <div className="gnb_bg">
                                 <div className="gnb_depth2_inner">
@@ -113,14 +117,37 @@ const Header = () => {
                                       <span className="title">철도역·열차</span>
                                   </div>
                                   <div className="gnb_depth2_list">
-
+                                    <ul>
+                                      <li>
+                                        <a href="#" className="gnb_dep3_open" title="">철도역 안내</a>
+                                        <div className="gnb_dep3_list">
+                                          <ul>
+                                            <li><a href="#" className="gnb_dep4" title="">역 안내</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="새 창으로 열기" target="_blank">노선안내</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="">역 편의 시설</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="">회의실</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="">도심공항터미널</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="">승차권 제휴할인</a></li>
+                                          </ul>
+                                        </div>
+                                      </li>
+                                      <li>
+                                        <a href="#" className="gnb_dep3_open" title="">열차 안내</a>
+                                        <div className="gnb_dep3_list">
+                                          <ul>
+                                            <li><a href="#" className="gnb_dep4" title="">열차 좌석배치도</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="">열차 편의시설</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="">열차이용에티켓</a></li>
+                                          </ul>
+                                        </div>
+                                      </li>
+                                    </ul>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </li>
-                          <li onMouseEnter={() => setActiveMenu(2)} 
-                              onMouseLeave={() => setActiveMenu(null)}><a href="">고객서비스</a>
+                          <li><a href="" onClick={(e) => handleMenuClick(e, 2)}>고객서비스</a>
                             <div className={`gnb_depth2_item gnb_depth2_item1 ${activeMenu === 2 ? "active" : ""}`}>
                               <div className="gnb_bg">
                                 <div className="gnb_depth2_inner">
@@ -128,22 +155,79 @@ const Header = () => {
                                       <span className="title">고객서비스</span>
                                   </div>
                                   <div className="gnb_depth2_list">
-
+                                    <ul>
+                                      <li><a href="#" className="gnb_dep3" title="">공지사항</a></li>
+                                      <li>
+                                        <a href="#" className="gnb_dep3_open" title="">고객센터</a>
+                                        <div className="gnb_dep3_list">
+                                          <ul>
+                                            <li><a href="#" className="gnb_dep4" title="새 창으로 열기">고객의 소리 접수/조회</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="">철도고객센터</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="새 창으로 열기">서비스아이디어제안</a></li>
+                                          </ul>
+                                        </div>
+                                      </li>
+                                      <li>
+                                        <a href="#" className="gnb_dep3_open" title="">유실물 찾기</a>
+                                        <div className="gnb_dep3_list">
+                                          <ul>
+                                            <li><a href="#" className="gnb_dep4" title="">유실물신고안내</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="">유실물 찾기</a></li>
+                                          </ul>
+                                        </div>
+                                      </li>
+                                      <li><a href="#" className="gnb_dep3" title="">열차서비스</a></li>
+                                      <li><a href="#" className="gnb_dep3" title="">교통약자 배려서비스</a></li>
+                                      <li>
+                                        <a href="#" className="gnb_dep3_open" title="">전철이용안내/지연증명</a>
+                                        <div className="gnb_dep3_list">
+                                          <ul>
+                                            <li><a href="#" className="gnb_dep4" title="">전철이용안내</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="새 창으로 열기">간편지연증명서 발급</a></li>
+                                          </ul>
+                                        </div>
+                                      </li>
+                                      <li><a href="#" className="gnb_dep3" title="">레일플러스 교통카드</a></li>
+                                      <li>
+                                        <a href="#" className="gnb_dep3_open" title="">철도범죄신고</a>
+                                        <div className="gnb_dep3_list">
+                                          <ul>
+                                            <li><a href="#" className="gnb_dep4" title="">철도범죄신고안내</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="">암표제보</a></li>
+                                          </ul>
+                                        </div>
+                                      </li>
+                                      <li><a href="#" className="gnb_dep3" title="새 창으로 열기">광고안내</a></li>
+                                      <li><a href="#" className="gnb_dep3" title="">철도시민안전신고센터</a></li>
+                                    </ul>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </li>
-                          <li onMouseEnter={() => setActiveMenu(3)} 
-                              onMouseLeave={() => setActiveMenu(null)}><a href="">코레일멤버십</a>
-                            <div className={`gnb_depth2_item gnb_depth2_item1 ${activeMenu === 2 ? "active" : ""}`}>
+                          <li><a href="" onClick={(e) => handleMenuClick(e, 3)}>코레일멤버십</a>
+                            <div className={`gnb_depth2_item gnb_depth2_item1 ${activeMenu === 3 ? "active" : ""}`}>
                               <div className="gnb_bg">
                                 <div className="gnb_depth2_inner">
                                   <div className="sgnb_title_txt">
                                       <span className="title">코레일멤버십</span>
                                   </div>
                                   <div className="gnb_depth2_list">
-
+                                    <ul>
+                                      <li>
+                                        <a href="#" className="gnb_dep3_open" title="">소개</a>
+                                        <div className="gnb_dep3_list">
+                                          <ul>
+                                            <li><a href="#" className="gnb_dep4" title="">멤버십 소개</a></li>
+                                            <li><a href="#" className="gnb_dep4" title="">멤버십 제휴소개</a></li>
+                                          </ul>
+                                        </div>
+                                      </li>
+                                      <li><a href="#" className="gnb_dep3" title="">KTX 마일리지＆회원쿠폰</a></li>
+                                      <li><a href="#" className="gnb_dep3" title="">멤버십 가입신청</a></li>
+                                      <li><a href="#" className="gnb_dep3" title="">예약보관금 반환접수</a></li>
+                                      <li><a href="#" className="gnb_dep3" title="">러브포인트 기부</a></li>
+                                    </ul>
                                   </div>
                                 </div>
                               </div>
