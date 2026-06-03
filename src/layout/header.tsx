@@ -4,10 +4,11 @@ import { useState } from "react";
 
 const Header = () => {
   const [activeMenu, setActiveMenu] = useState(null);
+  
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleMenuClick = (e, menuIndex) => {
     e.preventDefault(); 
-    
     setActiveMenu((prev) => (prev === menuIndex ? null : menuIndex));
   };
 
@@ -34,7 +35,9 @@ const Header = () => {
                   </div>
                 </div>
             </div>
-            <div className="header-nav">
+            <div className={`header-nav ${isHovered || activeMenu !== null ? "current" : ""}`}
+  onMouseEnter={() => setIsHovered(true)} 
+  onMouseLeave={() => setIsHovered(false)}>
                 <div className="header-inner nav-inner">
                     <h1 className="logo"><a href="#none" aria-label="코레일 승차권예매 메인페이지로 이동"></a></h1>
                     <nav>
@@ -147,7 +150,8 @@ const Header = () => {
                               </div>
                             </div>
                           </li>
-                          <li><a href="" onClick={(e) => handleMenuClick(e, 2)}>고객서비스</a>
+                          <li>
+                            <a href="" onClick={(e) => handleMenuClick(e, 2)}>고객서비스</a>
                             <div className={`gnb_depth2_item gnb_depth2_item1 ${activeMenu === 2 ? "active" : ""}`}>
                               <div className="gnb_bg">
                                 <div className="gnb_depth2_inner">
@@ -205,7 +209,8 @@ const Header = () => {
                               </div>
                             </div>
                           </li>
-                          <li><a href="" onClick={(e) => handleMenuClick(e, 3)}>코레일멤버십</a>
+                          <li>
+                            <a href="" onClick={(e) => handleMenuClick(e, 3)}>코레일멤버십</a>
                             <div className={`gnb_depth2_item gnb_depth2_item1 ${activeMenu === 3 ? "active" : ""}`}>
                               <div className="gnb_bg">
                                 <div className="gnb_depth2_inner">

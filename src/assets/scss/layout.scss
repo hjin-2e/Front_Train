@@ -272,8 +272,8 @@
         z-index: 2;
         position: absolute;
         top:0;
-        left: -23%;
-        width: 22%;
+        left: -22%;
+        width: calc(100% /5);
         height: 100%;
         background-color: var(--white-color);
       }
@@ -282,8 +282,8 @@
         z-index: 2;
         position: absolute;
         top:0;
-        right: -23%;
-        width: 22%;
+        right: -22%;
+        width: calc(100% /5);
         height: 100%;
         background-color: var(--white-color);
       }

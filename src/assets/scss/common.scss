@@ -198,6 +198,7 @@ header {
           width: 100%;
           height: 100%;
           .gnb_depth1 {
+            position: static;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -208,14 +209,15 @@ header {
               font-size:21px;
               font-weight: 700;
               a {
-
+                padding: 35px 0 32px;
               }
               & a:hover {
                 color:#078eb9;
-                border-color: #078eb9;
+                border-bottom: 3px solid #078eb9;
               }
               .gnb_depth2_item {
                 position: absolute;
+                z-index: 999;
                 left: -30px;
                 top: 100px;
                 width: calc(100% + 60px);
@@ -224,7 +226,7 @@ header {
                 background-color: var(--white-color);
                 display: none;
                 box-shadow: 0 24px 24px -24px rgba(0, 0, 0, 0.5);
-                &.active {
+                &:hover {
                   display: block;
                   max-height: 450px;
                   opacity: 1;
@@ -323,9 +325,31 @@ header {
     }
     &.current {
       background:var(--white-color);
-      .gnb {
-        li {
-          color: var(--black-color);
+      nav {
+        .gnb_depth1 {
+          > li {
+            color: var(--black-color);
+            &:hover {
+              .gnb_depth2_item {
+                display: block;
+              }
+            }
+          }
+        }
+      }
+      &::before {
+        content: "";
+        height: 1px;
+        width: 100%;
+        background: #cccccc;
+        position: absolute;
+        top: 100px;
+        left: 0;
+        z-index: 1;
+      }
+      .util-wrap {
+        .btn-allmenu {
+          background: url("/src/assets/img/icon_common/scrolled_ham_icon.svg") no-repeat;
         }
       }
     }
@@ -430,6 +454,15 @@ h1.logo > a {
   aspect-ratio: 211 / 30;
   background: url(/src/assets/img/logos/ticket/type=ticket.svg);
 }
+
+.current {
+  h1.logo > a {
+    aspect-ratio: 211 / 30;
+    background: url(/src/assets/img/logos/ticket/type=ticket-color.svg);
+  }
+}
+
+
 
 /* ====================================================================================================
    버튼
