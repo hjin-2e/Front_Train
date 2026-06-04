@@ -167,14 +167,14 @@
                 font-weight: 500;
                 width: 100%;
                 padding: 8px 8px 8px 0;
-                border-bottom: 1px solid #FFF;
+                border-bottom: 1px solid var(--white-color);
                 background-color: transparent;
             }
             a {
                 background-position: right 8px center;
                 background-repeat: no-repeat;
                 left: 0;
-                border-bottom: 1px solid #fff;
+                border-bottom: 1px solid var(--white-color);
             }
         }
     }
@@ -219,7 +219,7 @@
     position: relative;
     padding-top:50px;
     .tit {
-        color:111;
+        color:var(--black-color);
         font-size: 28px;
         font-weight: 400;
         text-align: center;
@@ -289,8 +289,6 @@
       }
     }
     
-
-
     .imgbox {
         position: relative;
         & > div {
@@ -488,4 +486,861 @@
 ================================================== */
 
 
+/* ==================================================
+    서브 페이지 공통 (Sub Page)
+================================================== */
+.sub-page { 
+  width: 100%;
+  max-width: 1400px; 
+  margin: 0 auto;
+  padding: 0 0 50px;
+  // background-color: #f4f5f7; 
+  // min-height: 100vh; 
+  // box-sizing: border-box; 
+}
+// 서브 타이틀 부분
+.sub-top {
+  width: 100%;
+  padding-top: 100px;
+  background-color: var(--common-color);
+  .page-title { 
+    width: 100%; 
+    text-align: center; 
+    padding: 32px 0; 
+    background-color: var(--common-color);
+    h2 {
+      display: block;
+      color: var(--white-color); 
+      font-size: 32px; 
+      font-weight: bold; 
+      text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5) !important;
+    } 
+    &::before {
+      content: "";
+      z-index: -1;
+      position: absolute;
+      top: 40px;
+      left: 0;
+      width: 100%;
+      height: 210px;
+      background-color: var(--common-color);
+    }
+  }
+}
 
+.breadcrumb { 
+  position: relative;
+  width: 100%;
+  display: flex; 
+  justify-content: space-between; 
+  color: #555; 
+  font-size: 16px; 
+  padding: 10px 40px;
+  // border-bottom: 1px solid #ddd;  
+  background-color: var(--white-color);
+  margin-bottom: 20px;  
+.page-path {
+    display: flex;
+    align-items: center;
+    .ico-home {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      margin-right: 6px;
+      background-image: url("/src/assets/img/img_add_on/path_home_icon_blk.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+    }
+  }
+  .print { 
+    cursor: pointer; 
+    width: 22px; 
+    height: 22px;
+    background-image: url("/src/assets/img/img_add_on/print_icon_blk_svg.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    // top:50px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #DDD;
+  }
+}
+.content-box { max-width: 1050px; margin: 0 auto; padding: 30px 20px 80px 20px; box-sizing: border-box; }
+
+/* 열차 조회 결과 (TrainList) */
+
+// 1. 날짜 선택 바 스타일 (글자 크기 확대 및 컴팩트 정렬)
+.date-nav-bar {
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  gap: 16px; 
+  margin-bottom: 30px;
+  
+  button { 
+    border: 1px solid #ced2d6; 
+    border-radius: 50%; 
+    width: 36px; 
+    height: 36px; 
+    background-color: var(--white-color); 
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px; /* 💡 화살표 크기 확대 */
+    color: #333;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+  }
+  
+  span { 
+    font-size: 24px; /* 💡 날짜 글자 크기 시원하게 확대 (기존 22px) */
+    font-weight: bold; 
+    color: var(--black-color); 
+    cursor: pointer; 
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    padding-right: 0; 
+    
+    &::before {
+      display: none; 
+    }
+    
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background: url("/src/assets/img/img_add_on/ico_calendar-simple_svg_black.svg") no-repeat center;
+      background-size: contain;
+    }
+  }
+}
+
+// 2. 필터 바 스타일 (서울/부산 칸 확대 + 인원수 칸 축소)
+.filter-bar {
+  background-color: transparent; 
+  border-radius: 0; 
+  border: none; 
+  padding: 0; 
+  display: flex; 
+  flex-flow: row nowrap;
+  gap: 12px; 
+  align-items: center; 
+  margin-bottom: 30px; 
+  box-shadow: none; 
+  width: 100%;
+
+  // 개별 알약(Pill) 공통 디자인
+  .select {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    height: 54px; 
+    padding: 0 24px; /* 알약 내부 패딩 살짝 조절 */
+    color: var(--black-color);
+    font-size: 18px; 
+    font-weight: bold;
+    cursor: pointer; 
+    background-color: var(--white-color);
+    border: 1px solid #ced2d6; 
+    border-radius: 27px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04); 
+    box-sizing: border-box;
+    
+    .ico {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      margin-right: 8px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      
+      &.ico-start { background-image: url("/src/assets/img/img_add_on/ico_airplane_svg_black.svg"); }
+      &.ico-end { background-image: url("/src/assets/img/img_add_on/ico_map_svg_black.svg"); }
+      &.ico-user { background-image: url("/src/assets/img/img_add_on/ico_pp_svg_black.svg"); }
+    }
+
+    .bold {
+      font-size: 18px; 
+    }
+  }
+  
+  // 💡 [수정] 서울, 부산 알약 칸 너비 대폭 확대
+  .pill { 
+    flex: 2.8; /* 기존 2에서 2.8로 확대하여 공간을 많이 주었습니다 */
+    min-width: 210px;
+  }
+  
+  // 💡 [수정] 인원수 칸 너비 축소 (4번째 자식 div 요소 타겟팅)
+  & > div:nth-child(4) { 
+    flex: 1.0; /* 기존 1.3에서 1.0으로 대폭 축소 */
+    min-width: 140px; 
+    padding: 0 15px; /* 컴팩트하게 보이도록 내부 여백 축소 */
+  }
+
+  // 일반석, 직통 드롭다운 알약
+  .dropdown { 
+    flex: 1.2; 
+    position: relative;
+    padding-right: 40px; 
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23333' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 22px center;
+    background-size: 14px auto;
+    justify-content: center; 
+  }
+
+  // 가운데 양방향 화살표 스왑 버튼
+  .swap { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px; 
+    color: #555; 
+    cursor: pointer; 
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ced2d6;
+    background-color: var(--white-color);
+    border-radius: 50%; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    flex-shrink: 0; 
+
+    &:hover {
+      color: #0054a6;
+      border-color: #0054a6;
+    }
+  }
+}
+.train-card-list {
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px;
+  .train-card {
+    background-color: var(--white-color); 
+    border: 1px solid #ced2d6; 
+    border-radius: 6px; 
+    display: flex; 
+    overflow: hidden; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    .t-info { 
+      width: 150px; 
+      padding: 16px; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      border-right: 1px solid #f0f2f5; 
+      text-align: left; 
+      .type {
+        font-size: 16px; 
+        font-weight: bold; 
+        display: inline-block;
+        width: 75px;  
+        height: 24px; 
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: left center;
+        
+        &.logo-ktx {
+          background-image: url("/src/assets/img/img_add_on/train_ktx_ticket.png");
+        }
+        &.logo-sancheon {
+          background-image: url("/src/assets/img/img_add_on/train_sancheon_ticket.png");
+        }
+        &.logo-itx {
+          background-image: url("/src/assets/img/img_add_on/train_itx_saemaeul_ticket.png");
+        }
+        &.logo-mugung {
+          background-image: url("/src/assets/img/img_add_on/train_mugung_ticket.png");
+        }
+      } 
+      .num { 
+        font-size: 13px; 
+        color: #666; 
+        margin-top: 4px; 
+      } 
+    }
+    .t-route { 
+      flex: 1; 
+      padding: 16px 24px; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      text-align: left; 
+      .route-tit { 
+        font-size: 22px; 
+        font-weight: bold; 
+        color: #111; 
+        .time { 
+          color: #111; 
+          margin-left: 8px; 
+        } 
+      } 
+      .dur { 
+        font-size: 13px; 
+        color: #888; 
+        margin-top: 4px; 
+      } 
+    }
+    .t-seats {
+      display: flex; 
+      width: 340px;
+      .seat {
+        flex: 1; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center; 
+        cursor: pointer; 
+        padding: 12px;
+        border-left: 1px solid #CCC;
+        &:hover { background-color: #f7fafc; } &.special:hover { background-color: #fffbf0; }
+        .s-tit { font-size: 14px; color: #666; margin-bottom: 2px; }
+        .s-prc { font-size: 18px; font-weight: bold; color: #111; &.special { color: #e1a107; } }
+        .s-mil { font-size: 14px; color: #2b9348; margin-top: 2px; }
+      }
+    }
+  }
+}
+.btn-next-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 25px;
+  padding: 16px 0;
+  background-color: var(--white-color);
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  border: 1px solid #ced2d6;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #f8f9fa;
+    border-color: #0054a6;
+    color: #0054a6;
+  }
+}
+
+/* 결제 확인 (Confirm) */
+.confirm-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 100px); /* 화면 중앙에 오도록 높이 계산 */
+  padding: 40px 20px;
+}
+
+.confirm-box {
+  background-color: var(--white-color); 
+  padding: 40px; /* 기존 30px -> 40px 확대 */
+  border-radius: 8px; 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+  width: 100%;
+  max-width: 700px; /* 기존 550px -> 700px 창 크기 확대 */
+
+  .c-tit { 
+    margin: 0 0 24px 0; 
+    font-size: 24px; /* 제목 크기 확대 */
+    font-weight: bold; 
+    border-bottom: 2px solid #333; 
+    padding-bottom: 12px; 
+  }
+  .c-info {
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; 
+    font-size: 16px; /* 본문 크기 확대 */
+    color: #333; 
+    margin-bottom: 35px; 
+    text-align: left;
+    .total-price { 
+      border-top: 1px solid #eee; 
+      padding-top: 16px; 
+      font-size: 20px; 
+      font-weight: bold; 
+      color: #d9534f; 
+    }
+  }
+  .btn-group { 
+    display: flex; 
+    gap: 12px; 
+    button { 
+      padding: 14px 0; 
+      border-radius: 4px; 
+      cursor: pointer; 
+      font-size: 15px; 
+    } 
+    .btn-prev { 
+      flex: 1; 
+      border: 1px solid #ccc; 
+      background-color: var(--white-color); 
+    } 
+    .btn-pay { 
+      flex: 2; 
+      border: none; 
+      background-color: var(--common-color); 
+      color: var(--white-color); 
+      font-weight: bold; } 
+  }
+}
+
+/* 승차권 (Ticket) */
+.ticket-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding-top: 160px; /* 기존 120px -> 160px로 여백을 늘려 화면을 조금 더 아래로 내림 */
+  padding-bottom: 80px;
+}
+
+.digital-ticket-box {
+  width: 100%;
+  max-width: 420px; 
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1); 
+  border-radius: 12px;
+  overflow: hidden; /* 버튼이 꽉 찰 때 테두리 밖으로 삐져나가는 것을 예쁘게 잘라줌 */
+}
+
+.ticket-header { 
+  background-color: #0054a6; 
+  padding: 22px; 
+  text-align: center; 
+  color: var(--white-color); 
+  h4 { 
+    margin: 0; 
+    font-size: 18px; 
+    font-weight: bold; 
+    letter-spacing: 2px; 
+  } 
+}
+
+.ticket-body {
+  background-color: var(--white-color); 
+  padding: 30px 30px 0 30px; /* 양옆 여백은 30px 유지하고, 버튼이 바닥에 붙도록 하단 여백은 0으로 제거 */
+  text-align: center; 
+  
+  .t-route-box {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 25px; 
+    padding: 0 10px;
+    .station { 
+      span.lbl { 
+        font-size: 12px; 
+        color: #888; 
+        display: block; 
+      } 
+      span.st { 
+        font-size: 24px; 
+        font-weight: bold; 
+        color: #111; 
+      } 
+      span.tm { 
+        font-size: 18px; 
+        display: block; 
+        font-weight: 500; 
+        margin-top: 4px; 
+        color: #333; 
+        &.blue { 
+          color: #0054a6; 
+        } 
+      }
+    }
+    .arr { font-size: 22px; color: #ccc; }
+  }
+
+  .t-detail-box { 
+    border-top: 1px dashed #ccc; 
+    border-bottom: 1px dashed #ccc; 
+    padding: 16px 0; 
+    margin-bottom: 25px; 
+    font-size: 14px; 
+    color: #444; 
+    text-align: left; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+  }
+
+  .t-barcode { 
+    width: 130px; 
+    height: 130px; 
+    border: 1px solid #ddd; 
+    margin: 0 auto 25px auto; 
+    padding: 10px; 
+    box-sizing: border-box; 
+    div { 
+      width: 100%; 
+      height: 100%; 
+      background-color: #222; 
+    } 
+  }
+
+  .btn-ok { 
+    /* 양옆 패딩(30px + 30px)을 무시하고 가로 크기를 꽉 채우는 마법의 계산식 */
+    width: calc(100% + 60px); 
+    margin-left: -30px; 
+    padding: 18px 0; 
+    border: none; 
+    background-color: #333; 
+    color: var(--white-color); 
+    border-radius: 0; 
+    cursor: pointer; 
+    font-weight: bold; 
+    font-size: 16px; 
+  }
+}
+
+/* ==================================================
+    모달 (Modal) 공통
+================================================== */
+.modal-overlay {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  z-index: 9999;
+}
+.modal-content {
+  background-color: var(--white-color); 
+  width: 100%; 
+  max-width: 450px; 
+  padding: 24px;
+  box-sizing: border-box; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+  border-radius: 12px;
+  &.md { 
+    max-width: 540px; 
+  }
+  &.lg { 
+    max-width: 580px; 
+    border-radius: 0; 
+  }
+}
+.modal-header {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding-bottom: 14px;
+  &.line { 
+    border-bottom: 1px solid #ddd; 
+    margin-bottom: 15px; 
+  }
+  &.line-dark { 
+    border-bottom: 2px solid #333; 
+    margin-bottom: 20px; 
+  }
+  h3 { 
+    margin: 0; 
+    font-size: 18px; 
+    font-weight: bold; 
+    color: #111; 
+  }
+  .btn-close { 
+    font-size: 24px; 
+    cursor: pointer; 
+    background: none; 
+    border: none; 
+    color: #333; 
+    line-height: 1; 
+  }
+}
+
+/* 기차역 조회 모달 */
+.search-input-bar {
+  display: flex; 
+  align-items: center; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  padding: 8px 12px; 
+  background-color: #f1f3f6; 
+  margin-bottom: 15px;
+  input { 
+    flex: 1; 
+    border: none; 
+    background: none; 
+    outline: none; 
+    font-size: 14px; 
+  }
+}
+.tab-group {
+  display: flex; 
+  border-bottom: 2px solid #078eb9; 
+  margin-bottom: 15px; 
+  font-size: 14px; 
+  font-weight: bold;
+  .tab { 
+    padding: 8px 24px; 
+    color: #666; 
+    cursor: pointer; 
+  }
+  .tab.active { 
+    border: 1px solid #078eb9; 
+    border-bottom: none; 
+    color: var(--common-color); 
+    background-color: var(--white-color); 
+  }
+}
+.station-grid {
+  display: grid; 
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 8px; 
+  max-height: 360px; 
+  overflow-y: auto; 
+  padding-right: 2px;
+  .station-btn {
+    color: #333; 
+    font-size: 14px; 
+    cursor: pointer;
+    padding: 10px 4px; 
+    background-color: var(--white-color); 
+    border-radius: 20px; 
+    border: 1px solid #e1e3e5; 
+    &.active { 
+      color: #078eb9; 
+      font-weight: bold; 
+      border-color: #078eb9; 
+    }
+  }
+}
+
+/* 날짜/시간 선택 모달 */
+.date-info-box {
+  border: 1px solid #e1e5eb; 
+  border-radius: 8px; 
+  padding: 14px; 
+  text-align: center; 
+  margin-bottom: 20px;
+  .date-str { 
+    font-size: 18px; 
+    font-weight: bold; 
+    color: #0054a6; 
+    margin-bottom: 4px; 
+  }
+  .time-str { 
+    font-size: 14px; 
+    color: #333; 
+    font-weight: 500; 
+  }
+}
+.month-nav {
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  gap: 24px; 
+  margin-bottom: 15px; 
+  font-weight: bold; 
+  font-size: 16px;
+  .arrow { 
+    color: #333; 
+    cursor: pointer; 
+    padding: 0 10px; 
+    &.disabled { 
+      color: #ccc; 
+      cursor: default; 
+    } 
+  }
+  .current { 
+    min-width: 120px; 
+    text-align: center; 
+  }
+}
+.calendar-table {
+  width: 100%; 
+  border-collapse: collapse; 
+  margin-bottom: 25px; 
+  text-align: center;
+  th { 
+    height: 36px; 
+    font-size: 14px; 
+    font-weight: bold; 
+    border-top: 1px solid #111; 
+    border-bottom: 1px solid #ccc; 
+    width: 14.28%; 
+  }
+  th.sun { 
+    color: #d9534f; 
+  } 
+  th.sat { 
+    color: #0054a6; 
+  }
+  td {
+    height: 42px; 
+    position: relative; 
+    cursor: pointer; 
+    font-size: 14px; 
+    border: 1px solid #f0f0f0; 
+    color: #111;
+    &.past { 
+      color: #ccc; 
+      cursor: default; 
+    }
+    &.sun { 
+      color: #d9534f; 
+    } 
+    &.sat { 
+      color: #0054a6; 
+    }
+    &.selected {
+      background-color: #0054a6; 
+      color: var(--white-color); 
+      font-weight: bold;
+      .sel-box { 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center; 
+        height: 100%; 
+        span.d { 
+          font-size: 13px; 
+        } 
+        span.t { 
+          font-size: 9px; 
+          font-weight: normal; 
+          margin-top: 2px; 
+        } 
+      }
+    }
+  }
+}
+.time-select-wrap {
+  border-top: 1px solid #eee; 
+  padding-top: 15px;
+  .tit { 
+    font-size: 15px; 
+    font-weight: bold; 
+    margin-bottom: 12px; 
+    color: #111; 
+  }
+  .track-wrap {
+    display: flex; 
+    align-items: center; 
+    gap: 8px;
+    .arrow { 
+      font-size: 18px; 
+      color: #ccc; 
+      font-weight: bold; 
+    }
+    .track {
+      display: flex; 
+      gap: 8px; 
+      overflow-x: auto; 
+      flex: 1; 
+      padding: 4px 0;
+      .time-btn { 
+        padding: 8px 16px; 
+        border-radius: 20px; 
+        border: 1px solid #ccc; 
+        background-color: var(--white-color); 
+        color: #111; 
+        font-size: 13px; 
+        white-space: nowrap; 
+        cursor: pointer; 
+      }
+      .time-btn.active { 
+        border: none; 
+        background-color: #0054a6; 
+        color: var(--white-color); 
+        font-weight: bold; 
+      }
+    }
+  }
+}
+
+/* 인원 선택 모달 */
+.passenger-list {
+  display: flex; 
+  flex-direction: column; 
+  gap: 20px;
+  .passenger-row {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    .info { 
+      span.label { 
+        font-size: 16px; 
+        font-weight: bold; 
+        margin-right: 6px; 
+      } 
+      span.desc { 
+        font-size: 12px; 
+        color: #888; 
+      } 
+    }
+    .counter {
+      display: flex; 
+      align-items: center; 
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+      overflow: hidden;
+      button { 
+        width: 36px; 
+        height: 36px; 
+        background-color: #f8f9fa; 
+        border: none; 
+        font-size: 18px; 
+        cursor: pointer; 
+        color: #333; 
+        &.disabled { 
+          color: #ccc; 
+          cursor: default; 
+        } 
+      }
+      .num { 
+        width: 44px; 
+        text-align: center; 
+        font-size: 15px; 
+        font-weight: bold; 
+      }
+    }
+  }
+}
+.modal-btn-wrap {
+  display: flex; 
+  justify-content: center; 
+  gap: 10px; 
+  margin-top: 30px;
+  button { 
+    padding: 8px 24px; 
+    border-radius: 20px; 
+    font-size: 14px; 
+    cursor: pointer; 
+  }
+  .btn-cancel { 
+    border: 1px solid #999; 
+    background-color: var(--white-color); 
+    color: #333; 
+  }
+  .btn-submit { 
+    border: 1px solid #0054a6; 
+    background-color: var(--white-color); 
+    color: #0054a6; 
+    font-weight: bold; 
+  }
+}

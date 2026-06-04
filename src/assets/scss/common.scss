@@ -4,6 +4,7 @@
 :root {
   --white-color:#FFF;
   --black-color: #111;
+  --common-color: #078eb9
 }
 
 body {
@@ -81,6 +82,12 @@ section.sub{
   text-align:left;
   padding-left:10px !important;
 }
+
+.bold { 
+  color: #111;
+  font-size: 16px; 
+  font-weight: bold;   
+} 
 
 .box-horizon {
   overflow-x: auto;

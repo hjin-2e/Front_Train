@@ -1,13 +1,13 @@
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useState } from "react";
 
 const Header = () => {
-  const [activeMenu, setActiveMenu] = useState(null);
+  const [activeMenu, setActiveMenu] = useState<number | null>(null);
   
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleMenuClick = (e, menuIndex) => {
+  const handleMenuClick = (e: React.MouseEvent<HTMLAnchorElement>, menuIndex: number) => {
     e.preventDefault(); 
     setActiveMenu((prev) => (prev === menuIndex ? null : menuIndex));
   };
@@ -26,7 +26,7 @@ const Header = () => {
                   </div>
                   <div className="header-info">
                     <ul className="hd-info-list">
-                      <li><a href="">로그인</a></li>
+                      <li><Link to="/login">로그인</Link></li>
                       <li><a href="">장바구니</a></li>
                       <li><a href="">마이페이지</a></li>
                       <li><a href="">고객센터</a></li>
@@ -39,7 +39,7 @@ const Header = () => {
   onMouseEnter={() => setIsHovered(true)} 
   onMouseLeave={() => setIsHovered(false)}>
                 <div className="header-inner nav-inner">
-                    <h1 className="logo"><a href="#none" aria-label="코레일 승차권예매 메인페이지로 이동"></a></h1>
+                    <h1 className="logo"><Link to="/" aria-label="코레일 승차권예매 메인페이지로 이동"></Link></h1>
                     <nav>
                         <ul className="gnb_depth1">
                           <li>

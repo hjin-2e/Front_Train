@@ -3,7 +3,7 @@ import Header from "./header";
 import Footer from "./footer";
 import { IMAGES } from "@/assets/images";
 
-const Layout = ({ images }: { images: any }) => {
+const Layout = () => {
   return (
     <div className="flex">
       <Header />
