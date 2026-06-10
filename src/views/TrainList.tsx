@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 interface Train { id: string; type: string; number: string; depTime: string; arrTime: string; duration: string; normalPrice: string; specialPrice: string; borderColor: string; }
