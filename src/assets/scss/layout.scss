@@ -573,7 +573,12 @@
     background-color: #DDD;
   }
 }
-.content-box { max-width: 1050px; margin: 0 auto; padding: 30px 20px 80px 20px; box-sizing: border-box; }
+.content-box { 
+  max-width: 1050px; 
+  margin: 0 auto; 
+  padding: 30px 20px 80px 20px; 
+  box-sizing: border-box; 
+}
 
 /* 열차 조회 결과 (TrainList) */
 
@@ -808,9 +813,25 @@
         cursor: pointer; 
         padding: 12px;
         border-left: 1px solid #CCC;
-        &:hover { background-color: #f7fafc; } &.special:hover { background-color: #fffbf0; }
-        .s-tit { font-size: 14px; color: #666; margin-bottom: 2px; }
-        .s-prc { font-size: 18px; font-weight: bold; color: #111; &.special { color: #e1a107; } }
+        &:hover { 
+          background-color: #f7fafc; 
+        } 
+        &.special:hover { 
+          background-color: #fffbf0; 
+        }
+        .s-tit { 
+          font-size: 14px; 
+          color: #666; 
+          margin-bottom: 2px; 
+        }
+        .s-prc { 
+          font-size: 18px; 
+          font-weight: bold; 
+          color: #111; 
+          &.special {
+            color: #e1a107; 
+          } 
+        }
         .s-mil { font-size: 14px; color: #2b9348; margin-top: 2px; }
       }
     }
