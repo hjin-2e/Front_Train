@@ -76,9 +76,9 @@ jobs:
           # role-to-assume 줄은 삭제하세요.
           # ------------------------------------------------------
 
-       - name: Package build artifact
-         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-         run: |
+      - name: Package build artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
           mkdir -p deploy_package
           
           # ⚠️ 주의: Vite(React)를 쓴다면 dist/, CRA(React)를 쓴다면 build/ 입니다.
