@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import apiClient from '../api/client';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 interface Train { id: string; type: string; number: string; depTime: string; arrTime: string; duration: string; normalPrice: string; specialPrice: string; borderColor: string; }
@@ -78,6 +79,48 @@ export default function TrainList() {
     { id: '8', type: '무궁화호', number: '1151', depTime: '06:37', arrTime: '12:11', duration: '5시간 34분', normalPrice: '28,600원', specialPrice: '40,000원', borderColor: '#ff6600' }
   ];
 
+  // 역명 영문 변환기 (백엔드 호환용)
+  const getStationCode = (krName: string) => {
+    const map: Record<string, string> = { '서울': 'SEOUL', '대전': 'DAEJEON', '대구': 'DAEGU', '동대구': 'DAEGU', '부산': 'BUSAN' };
+    return map[krName] || 'UNKNOWN';
+  };
+
+  const [seatInfo, setSeatInfo] = useState<Record<string, number>>({});
+  const [loadingSeats, setLoadingSeats] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchSeats = async () => {
+      setLoadingSeats(true);
+      const newSeatInfo: Record<string, number> = {};
+      const startCode = getStationCode(startStation);
+      const endCode = getStationCode(endStation);
+
+      if (startCode === 'UNKNOWN' || endCode === 'UNKNOWN') {
+        // 지원하지 않는 역이면 모두 0석 처리
+        dummyTrains.forEach(t => newSeatInfo[t.id] = 0);
+        setSeatInfo(newSeatInfo);
+        setLoadingSeats(false);
+        return;
+      }
+
+      await Promise.all(dummyTrains.map(async (train) => {
+        try {
+          const res = await apiClient.get(`/api/trains/${train.id}`, {
+            params: { start: startCode, end: endCode }
+          });
+          newSeatInfo[train.id] = res.data.availableSeats;
+        } catch (err) {
+          // 조회 실패 시 매진 처리
+          newSeatInfo[train.id] = 0;
+        }
+      }));
+      setSeatInfo(newSeatInfo);
+      setLoadingSeats(false);
+    };
+
+    fetchSeats();
+  }, [startStation, endStation]);
+
   const handleStationSelect = (station: string) => { if (modalTarget === 'start') setStartStation(station); else setEndStation(station); setIsModalOpen(false); };
   const handleDateApply = () => { setSelectedYear(tempYear); setSelectedMonth(tempMonth); setSelectedDay(tempDay); setSelectedHour(tempHour); setIsDateModalOpen(false); };
   const handlePassengerApply = () => { setPassenger({ ...tempPassenger }); setIsPassengerModalOpen(false); };
@@ -88,7 +131,12 @@ export default function TrainList() {
   };
 
   const handleSelectTrain = (train: Train, seatType: '일반석' | '특실') => {
-    navigate('/confirm', { state: { startStation, endStation, selectedYear, selectedMonth, selectedDay, selectedHour, passengerStr: getPassengerString(), selectedTrain: train, selectedSeatType: seatType } });
+    const available = seatInfo[train.id];
+    if (available === undefined || available <= 0) {
+      alert('해당 열차는 매진되었습니다.');
+      return;
+    }
+    navigate('/confirm', { state: { startStation, endStation, selectedYear, selectedMonth, selectedDay, selectedHour, passengerStr: getPassengerString(), passenger, selectedTrain: train, selectedSeatType: seatType } });
   };
 
   const generateMonthWeeks = (year: number, month: number) => {
@@ -143,26 +191,36 @@ export default function TrainList() {
           </div>
 
           <div className="train-card-list">
-            {dummyTrains.map((train) => (
-              <div key={train.id} className="train-card" style={{ borderLeft: '5px solid #0054a6' }}>
-                <div className={`t-info ${train.type.includes('KTX') ? 'ktx' : 'other'}`}>
-                  <span className={`type ${getTrainLogoClass(train.type)}`}></span>
-                  <span className="num">{train.number}</span>
-                </div>
-                <div className="t-route">
-                  <div className="route-tit">{startStation} ➔ {endStation} <span className="time">({train.depTime} ~ {train.arrTime})</span></div>
-                  <div className="dur">소요시간: {train.duration}</div>
-                </div>
-                <div className="t-seats">
-                  <div className="seat" onClick={() => handleSelectTrain(train, '일반석')}>
-                    <span className="s-tit">일반실</span><span className="s-prc">{train.normalPrice}</span><span className="s-mil">5%적립</span>
+            {dummyTrains.map((train) => {
+              const available = seatInfo[train.id];
+              const isSoldOut = !loadingSeats && (available === undefined || available <= 0);
+              const seatLabel = loadingSeats ? '조회중...' : (isSoldOut ? '매진' : `잔여 ${available}석`);
+
+              return (
+                <div key={train.id} className="train-card" style={{ borderLeft: '5px solid #0054a6', opacity: isSoldOut ? 0.6 : 1 }}>
+                  <div className={`t-info ${train.type.includes('KTX') ? 'ktx' : 'other'}`}>
+                    <span className={`type ${getTrainLogoClass(train.type)}`}></span>
+                    <span className="num">{train.number}</span>
                   </div>
-                  <div className="seat special" onClick={() => handleSelectTrain(train, '특실')}>
-                    <span className="s-tit">특실</span><span className="s-prc special">{train.specialPrice}</span><span className="s-mil">5%적립</span>
+                  <div className="t-route">
+                    <div className="route-tit">{startStation} ➔ {endStation} <span className="time">({train.depTime} ~ {train.arrTime})</span></div>
+                    <div className="dur">소요시간: {train.duration}</div>
+                  </div>
+                  <div className="t-seats">
+                    <div className={`seat ${isSoldOut ? 'sold-out' : ''}`} onClick={() => handleSelectTrain(train, '일반석')} style={{ cursor: isSoldOut ? 'not-allowed' : 'pointer' }}>
+                      <span className="s-tit">일반실</span>
+                      <span className="s-prc" style={{ color: isSoldOut ? '#999' : '' }}>{isSoldOut ? '-' : train.normalPrice}</span>
+                      <span className="s-mil" style={{ color: isSoldOut ? '#e74c3c' : '#27ae60', fontWeight: 'bold' }}>{seatLabel}</span>
+                    </div>
+                    <div className={`seat special ${isSoldOut ? 'sold-out' : ''}`} onClick={() => handleSelectTrain(train, '특실')} style={{ cursor: isSoldOut ? 'not-allowed' : 'pointer' }}>
+                      <span className="s-tit">특실</span>
+                      <span className="s-prc special" style={{ color: isSoldOut ? '#999' : '' }}>{isSoldOut ? '-' : train.specialPrice}</span>
+                      <span className="s-mil" style={{ color: isSoldOut ? '#e74c3c' : '#27ae60', fontWeight: 'bold' }}>{seatLabel}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* 💡 계산식 연동형 다음날 조회하기 버튼 적용 */}

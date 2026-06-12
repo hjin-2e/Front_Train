@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Navigation } from 'swiper/modules';
+import apiClient from '../api/client';
 
 import 'swiper/css';
 import 'swiper/css/effect-fade';
@@ -34,6 +35,19 @@ const MainView: React.FC = () => {
   const [passenger, setPassenger] = useState({ adult: 1, child: 0, infant: 0, senior: 0 });
   const [tempPassenger, setTempPassenger] = useState({ ...passenger });
   const [isPassengerModalOpen, setIsPassengerModalOpen] = useState<boolean>(false);
+
+  // 4. 백엔드 연결 상태 체크
+  const [healthStatus, setHealthStatus] = useState<string>('');
+
+  const handleHealthCheck = async () => {
+    try {
+      setHealthStatus('확인 중...');
+      const response = await apiClient.get('/health');
+      setHealthStatus(`✅ 연결 성공: ${response.data}`);
+    } catch (error: any) {
+      setHealthStatus(`❌ 연결 실패: ${error.message}`);
+    }
+  };
 
   // 요일 계산 함수
   const getDayOfWeek = (year: number, month: number, day: number) => {
@@ -340,7 +354,11 @@ const MainView: React.FC = () => {
         <div className="cont-inner">
           <div className="notice-head">
             <h4>공지사항</h4>
-            <a href="" className="btnMore">더보기</a>
+            <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+              <span style={{fontSize: '12px', color: '#666', fontWeight: 'bold'}}>{healthStatus}</span>
+              <button onClick={handleHealthCheck} style={{padding: '4px 12px', backgroundColor: '#0052a4', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer', fontSize: '12px'}}>서버 연결 테스트</button>
+              <a href="" className="btnMore">더보기</a>
+            </div>
           </div>
           <ul className="notice-list">
             <li><a href="https://www.korail.com/ticket/guest/notice/24404" target="_blank"><p className="s-tit">정선아리랑열차 정선선 운행 재개 및 구간 조정 알림</p><span className="data">2026-04-30</span></a></li>

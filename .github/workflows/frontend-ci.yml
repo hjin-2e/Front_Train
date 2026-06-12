@@ -53,7 +53,9 @@ jobs:
       #     CI: true
 
       - name: Build
-        run: npm run build
+        run: |
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env.production
+          npm run build
         env:
           # Create React App / Vite 공통 환경변수
           NODE_ENV: production
