@@ -18,6 +18,8 @@ export default function Confirm() {
   const navigate = useNavigate();
   const data = (location.state as RouteState);
 
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [processStatus, setProcessStatus] = useState<string>('');
   if (!data || !data.selectedTrain) {
     return <div style={{ padding: '20px', marginTop: '160px', textAlign: 'center' }}>선택된 여정 정보가 없습니다.</div>;
   }
@@ -29,8 +31,6 @@ export default function Confirm() {
   const totalPrice = numericPrice * totalPassengers;
   const totalPriceStr = totalPrice.toLocaleString() + '원';
 
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [processStatus, setProcessStatus] = useState<string>('');
 
   const getStationCode = (krName: string) => {
     const map: Record<string, string> = { '서울': 'SEOUL', '대전': 'DAEJEON', '대구': 'DAEGU', '동대구': 'DAEGU', '부산': 'BUSAN' };
@@ -77,6 +77,7 @@ export default function Confirm() {
           });
           confirmSuccess = true;
           break; // 성공 시 루프 탈출
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           if (err.response?.status === 400 && err.response.data?.message?.includes('처리 중')) {
             setProcessStatus(`서버 처리 지연... 재시도 중 (${i+1}/3)`);
@@ -96,6 +97,7 @@ export default function Confirm() {
         navigate('/ticket', { state: { ...data, totalPriceStr } });
       }, 500);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(error);
       const errMsg = error.response?.data?.message || error.message || '서버 오류가 발생했습니다.';

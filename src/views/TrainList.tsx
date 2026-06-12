@@ -109,7 +109,7 @@ export default function TrainList() {
             params: { start: startCode, end: endCode }
           });
           newSeatInfo[train.id] = res.data.availableSeats;
-        } catch (err) {
+        } catch {
           // 조회 실패 시 매진 처리
           newSeatInfo[train.id] = 0;
         }
@@ -119,6 +119,7 @@ export default function TrainList() {
     };
 
     fetchSeats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startStation, endStation]);
 
   const handleStationSelect = (station: string) => { if (modalTarget === 'start') setStartStation(station); else setEndStation(station); setIsModalOpen(false); };
@@ -126,8 +127,8 @@ export default function TrainList() {
   const handlePassengerApply = () => { setPassenger({ ...tempPassenger }); setIsPassengerModalOpen(false); };
   const updateCount = (type: 'adult' | 'child' | 'infant' | 'senior', op: 'plus' | 'minus') => {
     const currentTotal = tempPassenger.adult + tempPassenger.child + tempPassenger.infant + tempPassenger.senior;
-    if (op === 'plus') { if (currentTotal >= 9) return alert('최대 9명까지 예매 가능합니다.'); setTempPassenger((p: any) => ({ ...p, [type]: p[type] + 1 })); }
-    else { if (tempPassenger[type] <= 0 || (type === 'adult' && tempPassenger[type] === 1 && currentTotal === 1)) return; setTempPassenger((p: any) => ({ ...p, [type]: p[type] - 1 })); }
+    if (op === 'plus') { if (currentTotal >= 9) return alert('최대 9명까지 예매 가능합니다.'); setTempPassenger((p: typeof passenger) => ({ ...p, [type]: p[type] + 1 })); }
+    else { if (tempPassenger[type] <= 0 || (type === 'adult' && tempPassenger[type] === 1 && currentTotal === 1)) return; setTempPassenger((p: typeof passenger) => ({ ...p, [type]: p[type] - 1 })); }
   };
 
   const handleSelectTrain = (train: Train, seatType: '일반석' | '특실') => {

@@ -44,6 +44,7 @@ const MainView: React.FC = () => {
       setHealthStatus('확인 중...');
       const response = await apiClient.get('/health');
       setHealthStatus(`✅ 연결 성공: ${response.data}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setHealthStatus(`❌ 연결 실패: ${error.message}`);
     }
@@ -152,14 +153,14 @@ const MainView: React.FC = () => {
         alert('최대 9명까지 예매 가능합니다.');
         return;
       }
-      setTempPassenger((prev: any) => ({ ...prev, [type]: currentVal + 1 }));
+      setTempPassenger((prev: typeof passenger) => ({ ...prev, [type]: currentVal + 1 }));
     } else {
       if (currentVal <= 0) return;
       if (type === 'adult' && currentVal === 1 && currentTotal === 1) {
         alert('최소 1명의 승객은 선택되어야 합니다.');
         return;
       }
-      setTempPassenger((prev: any) => ({ ...prev, [type]: currentVal - 1 }));
+      setTempPassenger((prev: typeof passenger) => ({ ...prev, [type]: currentVal - 1 }));
     }
   };
 
