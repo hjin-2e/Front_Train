@@ -18,9 +18,9 @@ phases:
       - echo "========================================"
       - echo " Frontend Deploy Start"
       - echo " $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-      - echo "========================================"
-      - echo "Target S3 Bucket      : s3://${FRONTEND_BUCKET}/"
-      - echo "CloudFront Distribution: ${CLOUDFRONT_DISTRIBUTION_ID}"
+      - 'echo "========================================"'
+      - 'echo "Target S3 Bucket      : s3://${FRONTEND_BUCKET}/"'
+      - 'echo "CloudFront Distribution: ${CLOUDFRONT_DISTRIBUTION_ID}"'
       - |
         if [ -z "${FRONTEND_BUCKET}" ] || [ -z "${CLOUDFRONT_DISTRIBUTION_ID}" ]; then
           echo "❌ ERROR: Required environment variables are missing."
