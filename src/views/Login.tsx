@@ -1,13 +1,38 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import apiClient from '../api/client';
 
 export default function Login() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [userId, setUserId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('로그인 시도:', { userId, password });
+    try {
+      const response = await apiClient.post('/api/auth/login', {
+        userId,
+        password
+      });
+
+      const { cognito_sub, name } = response.data;
+      
+      // 로컬스토리지에 로그인 세션 및 사용자명 저장
+      localStorage.setItem('cognito_sub', cognito_sub);
+      localStorage.setItem('user_name', name);
+
+      alert(`🎉 ${name}님, 환영합니다! 로그인이 완료되었습니다.`);
+
+      // 이전 페이지(예: 예매 화면) 및 여정 상태가 존재하면 복원 이동하고, 없으면 메인(/)으로 이동
+      const fromPath = location.state?.from || '/';
+      const trainState = location.state?.trainState;
+      navigate(fromPath, { state: trainState });
+    } catch (error: any) {
+      console.error(error);
+      const errMsg = error.response?.data?.message || '로그인 중 오류가 발생했습니다.';
+      alert(`로그인 실패: ${errMsg}`);
+    }
   };
 
   return (

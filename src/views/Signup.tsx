@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import apiClient from '../api/client';
 
 export default function Signup() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userId: '',
     password: '',
@@ -30,7 +33,7 @@ export default function Signup() {
   // 💡 1. 아이디 중복확인 핸들러
   const handleIdCheck = async () => {
     const idRegex = /^[a-zA-Z0-9]{6,15}$/; // 영문, 숫자 조합 6~15자
-    
+
     if (!formData.userId.trim()) {
       alert('아이디를 입력해 주세요.');
       return;
@@ -50,7 +53,7 @@ export default function Signup() {
       const isDuplicated = formData.userId === 'admin' || formData.userId === 'korail123';
 
       if (isDuplicated) {
-        setIdMessage('❌ 이미 사용 중이거나 중복된 아이es디입니다.');
+        setIdMessage('❌ 이미 사용 중이거나 중복된 아이디입니다.');
         setIsIdValid(false);
         setIsIdChecked(false);
       } else {
@@ -67,7 +70,7 @@ export default function Signup() {
   // 💡 2. 비밀번호 실시간 검증 가이드 메시지 생성 함수
   const getPasswordMessage = () => {
     if (!formData.password || !formData.confirmPassword) return { text: '', color: '' };
-    
+
     if (formData.password === formData.confirmPassword) {
       return { text: '✅ 비밀번호가 일치합니다.', color: '#27ae60' };
     } else {
@@ -78,7 +81,7 @@ export default function Signup() {
   const passMsg = getPasswordMessage();
 
   // 💡 3. 최종 서밋(가입요청) 검증 장치
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // 비밀번호 체크
@@ -93,9 +96,23 @@ export default function Signup() {
       return;
     }
 
-    // 모든 조건 만족 시 가입 프로세스 진행
-    alert('🎉 회원가입이 성공적으로 완료되었습니다!');
-    console.log('회원가입 데이터 전송:', formData);
+    try {
+      // 백엔드 회원가입 API 호출
+      await apiClient.post('/api/auth/signup', {
+        userId: formData.userId,
+        password: formData.password,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone
+      });
+
+      alert('🎉 회원가입이 성공적으로 완료되었습니다! 로그인해 주세요.');
+      navigate('/login');
+    } catch (error: any) {
+      console.error(error);
+      const errMsg = error.response?.data?.message || '회원가입 처리 중 오류가 발생했습니다.';
+      alert(`회원가입 실패: ${errMsg}`);
+    }
   };
 
   return (

@@ -40,11 +40,9 @@ export default function Confirm() {
   const handlePayment = async () => {
     setIsProcessing(true);
     setProcessStatus('좌석 확보 및 대기열 등록 중...');
-    
-    // 개발 서버 기동 중(DEV 모드)일 때는 자동으로 데모 모드 활성화 ('user123' 사용)
-    // 빌드(PROD 모드) 환경일 때는 실제 Cognito 연동 세션 사용
-    const isMock = import.meta.env.DEV || import.meta.env.VITE_USE_MOCK_AUTH === 'true';
-    const userId = isMock ? 'user123' : (localStorage.getItem('cognito_sub') || 'user123');
+
+    // 로컬스토리지의 로그인 정보(cognito_sub)를 우선 사용하고, 없을 경우 데모 UUID로 폴백
+    const userId = localStorage.getItem('cognito_sub') || 'e9a6f3b0-4f51-4b7b-8c88-e9f06a1f81d1';
 
     const trainId = data.selectedTrain!.id;
     const startCode = getStationCode(data.startStation!);
@@ -62,12 +60,13 @@ export default function Confirm() {
         userId,
         trainId,
         startStation: startCode,
-        endStation: endCode
+        endStation: endCode,
+        passengerCount: totalPassengers
       });
 
       const { reservationId } = reserveRes.data;
       setProcessStatus('결제 및 예약 확정 중...');
-      
+
       // Worker가 SQS 큐를 처리하여 DB에 저장할 시간을 줍니다 (1.5초)
       await new Promise(resolve => setTimeout(resolve, 1500));
 
@@ -82,10 +81,10 @@ export default function Confirm() {
           });
           confirmSuccess = true;
           break; // 성공 시 루프 탈출
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           if (err.response?.status === 400 && err.response.data?.message?.includes('처리 중')) {
-            setProcessStatus(`서버 처리 지연... 재시도 중 (${i+1}/3)`);
+            setProcessStatus(`서버 처리 지연... 재시도 중 (${i + 1}/3)`);
             await new Promise(resolve => setTimeout(resolve, 1500));
           } else {
             throw err; // 그 외 에러는 즉시 중단 (예: 만료, 중복)
@@ -102,7 +101,7 @@ export default function Confirm() {
         navigate('/ticket', { state: { ...data, totalPriceStr } });
       }, 500);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(error);
       const errMsg = error.response?.data?.message || error.message || '서버 오류가 발생했습니다.';
@@ -117,7 +116,7 @@ export default function Confirm() {
     <div className="sub-page confirm-wrapper">
       <div className="confirm-box">
         <h3 className="c-tit">결제 및 예매 정보 확인</h3>
-        
+
         <div className="c-info">
           <div><strong>구간 정보:</strong> {data.startStation} ➔ {data.endStation}</div>
           <div><strong>출발 일시:</strong> {data.selectedYear || 2026}년 {data.selectedMonth}월 {data.selectedDay}일 {data.selectedTrain.depTime}</div>
@@ -129,7 +128,7 @@ export default function Confirm() {
 
         <div className="btn-group" style={{ flexDirection: 'column', gap: '10px' }}>
           {isProcessing ? (
-            <div style={{ padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px', color: '#0054a6', fontWeight: 'bold' }}>
+            <div style={{ padding: '18px', backgroundColor: '#f8f9fa', borderRadius: '8px', color: '#0054a6', fontWeight: 'bold', fontSize: '16px', textAlign: 'center' }}>
               ⏳ {processStatus}
             </div>
           ) : (

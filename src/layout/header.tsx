@@ -1,11 +1,20 @@
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const Header = () => {
+  const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
-  
   const [isHovered, setIsHovered] = useState(false);
+
+  const cognitoSub = localStorage.getItem('cognito_sub');
+  const userName = localStorage.getItem('user_name');
+
+  const handleLogout = () => {
+    localStorage.removeItem('cognito_sub');
+    localStorage.removeItem('user_name');
+    alert('로그아웃 되었습니다.');
+    navigate('/');
+  };
 
   const handleMenuClick = (e: React.MouseEvent<HTMLAnchorElement>, menuIndex: number) => {
     e.preventDefault(); 
@@ -26,7 +35,16 @@ const Header = () => {
                   </div>
                   <div className="header-info">
                     <ul className="hd-info-list">
-                      <li><Link to="/login">로그인</Link></li>
+                      {cognitoSub ? (
+                        <>
+                          <li style={{ marginRight: '10px', display: 'flex', alignItems: 'center' }}>
+                            <span style={{ color: '#ccc', fontSize: '12px', fontWeight: 'bold' }}>{userName || '회원'}님</span>
+                          </li>
+                          <li><a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }}>로그아웃</a></li>
+                        </>
+                      ) : (
+                        <li><Link to="/login">로그인</Link></li>
+                      )}
                       <li><a href="">장바구니</a></li>
                       <li><a href="">마이페이지</a></li>
                       <li><a href="">고객센터</a></li>

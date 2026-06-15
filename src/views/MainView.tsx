@@ -123,17 +123,17 @@ const MainView: React.FC = () => {
             effect={'fade'}
             speed={3000}
             autoplay={{
-              delay: 3000, 
+              delay: 3000,
               disableOnInteraction: false,
             }}
-            loop={true} 
+            loop={true}
             className="main-swiper"
           >
             <SwiperSlide><img src={IMAGES['main.jpg']} alt="main_slide01" /></SwiperSlide>
             <SwiperSlide><img src={IMAGES['main02.jpg']} alt="main_slide02" /></SwiperSlide>
             <SwiperSlide><img src={IMAGES['main03.jpg']} alt="main_slide03" /></SwiperSlide>
           </Swiper>
-          
+
           <div className="event-pop">
             <div className="event-layer">
               <div className="pop_box">
@@ -156,7 +156,7 @@ const MainView: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         {/* 간편 예매바 상호작용 영역 */}
         <div className="ticket-box">
           <div className="ticket-wrap">
@@ -177,11 +177,11 @@ const MainView: React.FC = () => {
             <div className="day_start" onClick={() => setIsDateModalOpen(true)} style={{ cursor: 'pointer' }}>
               <label htmlFor="labelday" className="label">출발일</label>
               <div className="write-wrap">
-                <input 
-                  type="text" 
-                  id="labelday" 
-                  value={`${selectedYear}.${String(selectedMonth).padStart(2, '0')}.${String(selectedDay).padStart(2, '0')}(${getDayOfWeek(selectedYear, selectedMonth, selectedDay)}) ${selectedHour}시`} 
-                  readOnly 
+                <input
+                  type="text"
+                  id="labelday"
+                  value={`${selectedYear}.${String(selectedMonth).padStart(2, '0')}.${String(selectedDay).padStart(2, '0')}(${getDayOfWeek(selectedYear, selectedMonth, selectedDay)}) ${selectedHour}시`}
+                  readOnly
                 />
                 <a href="#none" className="btn_pop" onClick={(e) => e.preventDefault()}></a>
               </div>
@@ -203,12 +203,12 @@ const MainView: React.FC = () => {
         <section>
           <h2 className="tit">코레일은 <strong>다양한 할인상품</strong>으로 고객에게 다가가고 있습니다.</h2>
           <div className="cont-inner">
-            <Swiper 
+            <Swiper
               slidesPerView={5}
               spaceBetween={30}
               loop={true}
               pagination={{ clickable: true }}
-              navigation={true} 
+              navigation={true}
               className="slideSwiper pdt-list"
             >
               <SwiperSlide><a href="https://www.korail.com/ticket/discountSystem/internet">인터넷 특가</a></SwiperSlide>
@@ -257,9 +257,9 @@ const MainView: React.FC = () => {
         <div className="cont-inner">
           <div className="notice-head">
             <h4>공지사항</h4>
-            <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-              <span style={{fontSize: '12px', color: '#666', fontWeight: 'bold'}}>{healthStatus}</span>
-              <button onClick={handleHealthCheck} style={{padding: '4px 12px', backgroundColor: '#0052a4', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer', fontSize: '12px'}}>서버 연결 테스트</button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '12px', color: '#666', fontWeight: 'bold' }}>{healthStatus}</span>
+              <button onClick={handleHealthCheck} style={{ padding: '4px 12px', backgroundColor: '#0052a4', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer', fontSize: '12px' }}>서버 연결 테스트</button>
               <button className="btnMore" onClick={(e) => e.preventDefault()}>더보기</button>
             </div>
           </div>
@@ -277,7 +277,7 @@ const MainView: React.FC = () => {
       </div>
 
       {/* 💡 공통 모달 컴포넌트 연결 */}
-      <StationSelectModal 
+      <StationSelectModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSelect={handleStationSelect}

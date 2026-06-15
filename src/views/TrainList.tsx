@@ -118,14 +118,14 @@ export default function TrainList() {
 
   // 6. 더미 데이터 및 로고 핸들러
   const dummyTrains: Train[] = [
-    { id: '1', type: 'KTX', number: '001', depTime: '05:13', arrTime: '07:50', duration: '2시간 37분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
-    { id: '2', type: 'KTX', number: '161', depTime: '05:18', arrTime: '08:16', duration: '2시간 58분', normalPrice: '53,900원', specialPrice: '75,500원', borderColor: '#0054a6' },
-    { id: '3', type: 'KTX', number: '003', depTime: '05:27', arrTime: '08:16', duration: '2시간 49분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
-    { id: '4', type: 'ITX-새마을', number: '1001', depTime: '05:54', arrTime: '11:14', duration: '5시간 20분', normalPrice: '42,600원', specialPrice: '59,600원', borderColor: '#0081b3' },
-    { id: '5', type: 'KTX', number: '005', depTime: '05:58', arrTime: '08:43', duration: '2시간 45분', normalPrice: '59,400원', specialPrice: '83,200원', borderColor: '#0054a6' },
-    { id: '6', type: 'KTX-산천', number: '075', depTime: '06:03', arrTime: '08:49', duration: '2시간 46분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
-    { id: '7', type: 'ITX-새마을', number: '1003', depTime: '06:13', arrTime: '11:26', duration: '5시간 13분', normalPrice: '42,600원', specialPrice: '59,600원', borderColor: '#0081b3' },
-    { id: '8', type: '무궁화호', number: '1151', depTime: '06:37', arrTime: '12:11', duration: '5시간 34분', normalPrice: '28,600원', specialPrice: '40,000원', borderColor: '#ff6600' }
+    { id: '1', type: 'KTX', number: '001', depTime: '09:13', arrTime: '11:50', duration: '2시간 37분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
+    { id: '2', type: 'KTX', number: '161', depTime: '09:50', arrTime: '12:48', duration: '2시간 58분', normalPrice: '53,900원', specialPrice: '75,500원', borderColor: '#0054a6' },
+    { id: '3', type: 'KTX', number: '003', depTime: '10:10', arrTime: '12:59', duration: '2시간 49분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
+    { id: '4', type: 'ITX-새마을', number: '1001', depTime: '11:20', arrTime: '16:40', duration: '5시간 20분', normalPrice: '42,600원', specialPrice: '59,600원', borderColor: '#0081b3' },
+    { id: '5', type: 'KTX', number: '005', depTime: '12:05', arrTime: '14:50', duration: '2시간 45분', normalPrice: '59,400원', specialPrice: '83,200원', borderColor: '#0054a6' },
+    { id: '6', type: 'KTX-산천', number: '075', depTime: '13:15', arrTime: '16:01', duration: '2시간 46분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
+    { id: '7', type: 'ITX-새마을', number: '1003', depTime: '14:40', arrTime: '19:53', duration: '5시간 13분', normalPrice: '42,600원', specialPrice: '59,600원', borderColor: '#0081b3' },
+    { id: '8', type: '무궁화호', number: '1151', depTime: '15:30', arrTime: '21:04', duration: '5시간 34분', normalPrice: '28,600원', specialPrice: '40,000원', borderColor: '#ff6600' }
   ];
 
   const getStationCode = (krName: string) => {
@@ -135,6 +135,16 @@ export default function TrainList() {
 
   const [seatInfo, setSeatInfo] = useState<Record<string, number>>({});
   const [loadingSeats, setLoadingSeats] = useState<boolean>(true);
+
+  // 7. 좌석 정보 Fetch 이펙트
+  const getActualTrainId = (dummyId: string) => {
+    const dateStr = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
+    const baseId = parseInt(dummyId, 10);
+    if (dateStr === '2026-06-26') return String(baseId);
+    if (dateStr === '2026-06-27') return String(baseId + 8);
+    if (dateStr === '2026-06-28') return String(baseId + 16);
+    return null; // DB에 데이터가 없는 그 외의 날짜는 null 반환
+  };
 
   // 7. 좌석 정보 Fetch 이펙트
   useEffect(() => {
@@ -153,7 +163,12 @@ export default function TrainList() {
 
       await Promise.all(dummyTrains.map(async (train) => {
         try {
-          const res = await apiClient.get(`/api/trains/${train.id}`, {
+          const actualId = getActualTrainId(train.id);
+          if (!actualId) {
+            newSeatInfo[train.id] = 0; // 기차가 운행되지 않는 날짜는 잔여석 0석 처리
+            return;
+          }
+          const res = await apiClient.get(`/api/trains/${actualId}`, {
             params: { start: startCode, end: endCode }
           });
           newSeatInfo[train.id] = res.data.availableSeats;
@@ -167,16 +182,32 @@ export default function TrainList() {
 
     fetchSeats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startStation, endStation]);
+  }, [startStation, endStation, selectedYear, selectedMonth, selectedDay]);
 
   const handleSelectTrain = (train: Train, seatType: '일반석' | '특실') => {
+    // 💡 로그인 여부 확인
+    const cognitoSub = localStorage.getItem('cognito_sub');
+    const actualId = getActualTrainId(train.id);
+    const actualTrain = { ...train, id: actualId };
+
+    if (!cognitoSub) {
+      alert('로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.');
+      navigate('/login', { 
+        state: { 
+          from: '/trains',
+          trainState: { startStation, endStation, selectedYear, selectedMonth, selectedDay, selectedHour, passengerStr: getPassengerString(), passenger, selectedTrain: actualTrain, selectedSeatType: seatType }
+        }
+      });
+      return;
+    }
+
     const available = seatInfo[train.id];
     if (available === undefined || available <= 0) {
       alert('해당 열차는 매진되었습니다.');
       return;
     }
     navigate('/confirm', { 
-      state: { startStation, endStation, selectedYear, selectedMonth, selectedDay, selectedHour, passengerStr: getPassengerString(), passenger, selectedTrain: train, selectedSeatType: seatType } 
+      state: { startStation, endStation, selectedYear, selectedMonth, selectedDay, selectedHour, passengerStr: getPassengerString(), passenger, selectedTrain: actualTrain, selectedSeatType: seatType } 
     });
   };
 
@@ -222,7 +253,12 @@ export default function TrainList() {
           </div>
 
           <div className="train-card-list">
-            {dummyTrains.map((train) => {
+            {dummyTrains
+              .filter(train => {
+                const hour = parseInt(train.depTime.split(':')[0], 10);
+                return hour >= selectedHour;
+              })
+              .map((train) => {
               const available = seatInfo[train.id];
               const isSoldOut = !loadingSeats && (available === undefined || available <= 0);
               const seatLabel = loadingSeats ? '조회중...' : (isSoldOut ? '매진' : `잔여 ${available}석`);
