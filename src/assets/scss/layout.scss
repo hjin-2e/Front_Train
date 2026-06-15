@@ -470,9 +470,136 @@
 }
 
 /* ==================================================
-    로그인
+    로그인/회원가입
 ================================================== */
+.auth-box {
+    padding: 40px 0;
+    max-width: 560px;
+    margin: 0 auto;
+    
+    &.wide { 
+      max-width: 600px; 
+      padding: 40px 30px; 
+    }
+    .sub-tit {
+      color: #111;
+      font-size: 24px;
+      font-weight: bold;
 
+    }
+
+    // 로그인 박스
+    .login-box {
+      position: relative;
+      margin-top: 24px;
+      .input-row {
+        margin-bottom: 20px;
+        &.flex-row { 
+        display: flex; 
+        gap: 16px; 
+        margin-bottom: 18px; 
+        .col { 
+          flex: 1;
+          } 
+        }
+        &.mb-28 { 
+          margin-bottom: 28px; 
+        }
+
+        label { 
+          display: block; 
+          font-size: 16px; 
+          font-weight: 500; 
+          color: #333; 
+          margin-bottom: 6px; 
+        }
+        input { 
+        width: 100%; 
+        padding: 12px; 
+        border: 1px solid #ccc; 
+        border-radius: 4px; 
+        font-size: 14px; 
+        box-sizing: border-box; 
+        outline: none; 
+          &:focus { 
+            border-color: var(--common-color); 
+          } 
+      }
+        
+        .input-with-btn {
+          display: flex; 
+          gap: 8px;
+          input { 
+            flex: 1; 
+          }
+          button { 
+            background-color: #333; 
+            color: var(--white-color); 
+            padding: 0 16px; 
+            border-radius: 4px; 
+            font-size: 13px; 
+            cursor: pointer; 
+            border: none; 
+          }
+        }
+      }
+    }
+
+    .btn-submit { 
+      width: 100%; 
+      color: var(--white-color); 
+      padding: 14px; 
+      font-size: 16px; 
+      font-weight: bold; 
+      cursor: pointer; 
+      margin-top: 10px;
+      border: none; 
+      border-radius: 4px; 
+      background-color: var(--common-color);  
+    }
+    
+    .btn-group { 
+      display: flex; 
+      gap: 12px; 
+      button { 
+        padding: 12px; 
+        cursor: pointer; 
+        font-size: 16px; 
+        font-weight: bold; 
+        border-radius: 4px; 
+      } 
+      .btn-cancel { 
+        width: 30%; 
+        color:#333;
+        border: 1px solid #ccc; 
+        background-color: var(--white-color); 
+      } 
+      .btn-ok { 
+        width: 70%; 
+        color: var(--white-color); 
+        border: none; 
+        background-color: var(--common-color); 
+      } 
+    }
+
+    .auth-footer {
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      gap: 12px; 
+      color: #666;
+      font-size: 14px;
+      margin-top: 20px; 
+      padding-top: 16px; 
+      border-top: 1px solid #eee;  
+      span.bar { color: #ccc; }
+      a, span.link { 
+        color: var(--common-color); 
+        font-weight: bold; 
+        cursor: pointer; 
+        text-decoration: none; }
+    }
+  }
 
 
 /* ==================================================
@@ -600,10 +727,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px; /* 💡 화살표 크기 확대 */
+    // font-size: 16px; /* 💡 화살표 크기 확대 */
     color: #333;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-
+    &.data-prev::before{
+      content: '';
+      position: relative;
+      z-index: 1;
+      display: block;
+      width:12px;
+      height:19px;
+      background:url("/src/assets/img/icon_arrows/line_arrow_left_black.svg") no-repeat;
+    }
+    &.data-next::before{
+      content: '';
+      position: relative;
+      z-index: 1;
+      display: block;
+      width:12px;
+      height:19px;
+      background:url("/src/assets/img/icon_arrows/line_arrow_right_black.svg") no-repeat;
+    }
     &:hover {
       background-color: #f8f9fa;
     }
@@ -1060,7 +1204,7 @@
     max-width: 540px; 
   }
   &.lg { 
-    max-width: 580px; 
+    max-width: 865px; 
     border-radius: 0; 
   }
 }
@@ -1079,36 +1223,46 @@
   }
   h3 { 
     margin: 0; 
-    font-size: 18px; 
+    font-size: 21px; 
     font-weight: bold; 
     color: #111; 
   }
   .btn-close { 
-    font-size: 24px; 
-    cursor: pointer; 
-    background: none; 
-    border: none; 
-    color: #333; 
-    line-height: 1; 
+    display: block;
+    width:22px;
+    height: 22px;
+    background: url("/src/assets/img/icon_common/ico_pop-close-black.png") no-repeat;
   }
 }
 
 /* 기차역 조회 모달 */
 .search-input-bar {
+  position: relative;
   display: flex; 
   align-items: center; 
+  height:40px;
+  padding: 8px 12px; 
+  margin-bottom: 15px;
   border: 1px solid #ccc; 
   border-radius: 4px; 
-  padding: 8px 12px; 
   background-color: #f1f3f6; 
-  margin-bottom: 15px;
   input { 
     flex: 1; 
     border: none; 
     background: none; 
     outline: none; 
-    font-size: 14px; 
+    font-size: 16px; 
   }
+  // &::before {
+  //   content: '';
+  //   position: absolute;
+  //   top:7px;
+  //   right:5px;
+  //   display:block;
+  //   width:25px;
+  //   height:25px;
+  //   background: url("/src/assets/img/icon_common/search_black.png") no-repeat;
+  // }
 }
 .tab-group {
   display: flex; 
@@ -1137,17 +1291,25 @@
   padding-right: 2px;
   .station-btn {
     color: #333; 
-    font-size: 14px; 
+    font-size: 18px; 
+    line-height: 1;
     cursor: pointer;
     padding: 10px 4px; 
     background-color: var(--white-color); 
     border-radius: 20px; 
-    border: 1px solid #e1e3e5; 
+    border: 1px solid #DDD; 
     &.active { 
       color: #078eb9; 
       font-weight: bold; 
       border-color: #078eb9; 
     }
+  }
+  .no-result {
+    grid-column: '1 / -1';
+    color: #999;
+    font-size: 16px;
+    text-align: center;
+    padding: 20px 0;
   }
 }
 
@@ -1165,7 +1327,7 @@
     margin-bottom: 4px; 
   }
   .time-str { 
-    font-size: 14px; 
+    font-size: 16px; 
     color: #333; 
     font-weight: 500; 
   }
@@ -1177,11 +1339,19 @@
   gap: 24px; 
   margin-bottom: 15px; 
   font-weight: bold; 
-  font-size: 16px;
+  font-size: 24px;
   .arrow { 
     color: #333; 
-    cursor: pointer; 
+    cursor: pointer;
     padding: 0 10px; 
+    width:12px;
+    height:19px;
+    &.month-prev{
+      background: url("/src/assets/img/icon_arrows/line_arrow_left_black.svg") no-repeat; 
+    }
+    &.month-next{
+      background: url("/src/assets/img/icon_arrows/line_arrow_right_black.svg") no-repeat; 
+    }
     &.disabled { 
       color: #ccc; 
       cursor: default; 
@@ -1199,7 +1369,8 @@
   text-align: center;
   th { 
     height: 36px; 
-    font-size: 14px; 
+    line-height:36px;
+    font-size: 16px; 
     font-weight: bold; 
     border-top: 1px solid #111; 
     border-bottom: 1px solid #ccc; 
@@ -1212,12 +1383,28 @@
     color: #0054a6; 
   }
   td {
-    height: 42px; 
-    position: relative; 
+    position: relative;
+    height:40px; 
     cursor: pointer; 
-    font-size: 14px; 
-    border: 1px solid #f0f0f0; 
     color: #111;
+    padding:4px 0;
+    border: 1px solid #f0f0f0; 
+    .sel-box { 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      align-items: center; 
+      height: 100%; 
+      span.date{
+        font-size: 16px; 
+      } 
+      span.txt{
+        font-size: 14px; 
+        font-weight: 400;
+        line-height: 1; 
+        margin-top: 2px; 
+      } 
+    }
     &.past { 
       color: #ccc; 
       cursor: default; 
@@ -1232,21 +1419,6 @@
       background-color: #0054a6; 
       color: var(--white-color); 
       font-weight: bold;
-      .sel-box { 
-        display: flex; 
-        flex-direction: column; 
-        justify-content: center; 
-        align-items: center; 
-        height: 100%; 
-        span.d { 
-          font-size: 13px; 
-        } 
-        span.t { 
-          font-size: 9px; 
-          font-weight: normal; 
-          margin-top: 2px; 
-        } 
-      }
     }
   }
 }
@@ -1254,7 +1426,7 @@
   border-top: 1px solid #eee; 
   padding-top: 15px;
   .tit { 
-    font-size: 15px; 
+    font-size: 18px; 
     font-weight: bold; 
     margin-bottom: 12px; 
     color: #111; 
@@ -1264,9 +1436,16 @@
     align-items: center; 
     gap: 8px;
     .arrow { 
-      font-size: 18px; 
-      color: #ccc; 
-      font-weight: bold; 
+      width:12px;
+      height:19px;
+      &.time-prev {
+        display: block;
+        background: url(/src/assets/img/icon_arrows/line_arrow_left_black.svg) no-repeat; 
+      }
+      &.time-next {
+        display: block;
+        background: url(/src/assets/img/icon_arrows/line_arrow_right_black.svg) no-repeat; 
+      }
     }
     .track {
       display: flex; 
@@ -1275,12 +1454,12 @@
       flex: 1; 
       padding: 4px 0;
       .time-btn { 
-        padding: 8px 16px; 
+        padding: 5px 16px; 
         border-radius: 20px; 
         border: 1px solid #ccc; 
         background-color: var(--white-color); 
         color: #111; 
-        font-size: 13px; 
+        font-size: 16px; 
         white-space: nowrap; 
         cursor: pointer; 
       }
@@ -1310,7 +1489,7 @@
         margin-right: 6px; 
       } 
       span.desc { 
-        font-size: 12px; 
+        font-size: 14px; 
         color: #888; 
       } 
     }
@@ -1336,7 +1515,7 @@
       .num { 
         width: 44px; 
         text-align: center; 
-        font-size: 15px; 
+        font-size: 16px; 
         font-weight: bold; 
       }
     }
@@ -1348,10 +1527,10 @@
   gap: 10px; 
   margin-top: 30px;
   button { 
-    padding: 8px 24px; 
-    border-radius: 20px; 
-    font-size: 14px; 
+    padding: 5px 32px;  
+    font-size: 16px;
     cursor: pointer; 
+    border-radius:20px;
   }
   .btn-cancel { 
     border: 1px solid #999; 
