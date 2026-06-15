@@ -40,7 +40,12 @@ export default function Confirm() {
   const handlePayment = async () => {
     setIsProcessing(true);
     setProcessStatus('좌석 확보 및 대기열 등록 중...');
-    const userId = 'user123'; // 데모를 위한 고정 유저ID
+    
+    // 개발 서버 기동 중(DEV 모드)일 때는 자동으로 데모 모드 활성화 ('user123' 사용)
+    // 빌드(PROD 모드) 환경일 때는 실제 Cognito 연동 세션 사용
+    const isMock = import.meta.env.DEV || import.meta.env.VITE_USE_MOCK_AUTH === 'true';
+    const userId = isMock ? 'user123' : (localStorage.getItem('cognito_sub') || 'user123');
+
     const trainId = data.selectedTrain!.id;
     const startCode = getStationCode(data.startStation!);
     const endCode = getStationCode(data.endStation!);
