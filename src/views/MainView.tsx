@@ -213,7 +213,7 @@ const MainView: React.FC = () => {
               navigation={true}
               className="slideSwiper pdt-list"
             >
-              {[...Array(2)].flatMap((_, i) => [
+              {[...Array(2)].flatMap((i) => [
                 <SwiperSlide key={`slide-1-${i}`}><a href="https://www.korail.com/ticket/discountSystem/internet">인터넷 특가</a></SwiperSlide>,
                 <SwiperSlide key={`slide-2-${i}`}><a href="https://www.korail.com/ticket/discountSystem/discount">공공할인</a></SwiperSlide>,
                 <SwiperSlide key={`slide-3-${i}`}><a href="https://www.korail.com/ticket/discountSystem/childern">다자녀 행복</a></SwiperSlide>,
