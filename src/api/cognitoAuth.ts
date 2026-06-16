@@ -134,9 +134,59 @@ export function cognitoSignUp(
         reject(err);
         return;
       }
-      // 이메일 인증 비활성화 → result.userConfirmed === true
       const sub = result?.userSub || '';
       resolve(sub);
     });
   });
 }
+
+/**
+ * Cognito 이메일 인증코드를 검증하여 가입을 확정합니다.
+ */
+export function cognitoConfirmSignUp(username: string, code: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!userPool) {
+      reject(new Error('Cognito UserPool이 초기화되지 않았습니다.'));
+      return;
+    }
+
+    const cognitoUser = new CognitoUser({
+      Username: username,
+      Pool: userPool,
+    });
+
+    cognitoUser.confirmRegistration(code, true, (err) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+/**
+ * Cognito 이메일 인증코드를 재전송합니다.
+ */
+export function cognitoResendConfirmationCode(username: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!userPool) {
+      reject(new Error('Cognito UserPool이 초기화되지 않았습니다.'));
+      return;
+    }
+
+    const cognitoUser = new CognitoUser({
+      Username: username,
+      Pool: userPool,
+    });
+
+    cognitoUser.resendConfirmationCode((err) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+  });
+}
+

@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import apiClient from '../api/client';
-import { fetchCognitoConfig, isMockMode, cognitoSignUp } from '../api/cognitoAuth';
+import {
+  fetchCognitoConfig,
+  isMockMode,
+  cognitoSignUp,
+  cognitoConfirmSignUp,
+  cognitoResendConfirmationCode
+} from '../api/cognitoAuth';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -15,6 +21,12 @@ export default function Signup() {
     phone: ''
   });
   const [configLoaded, setConfigLoaded] = useState<boolean>(false);
+
+  // 이메일 인증 단계 관리용 상태
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
+  const [verificationCode, setVerificationCode] = useState<string>('');
+  const [registeredSub, setRegisteredSub] = useState<string>('');
+  const [resending, setResending] = useState<boolean>(false);
 
   // Cognito 설정 로드
   useEffect(() => {
@@ -31,6 +43,56 @@ export default function Signup() {
   const [checkedId, setCheckedId] = useState<string>('');
   const [idMessage, setIdMessage] = useState<string>('');
   const [isIdValid, setIsIdValid] = useState<boolean>(false);
+
+  const handleVerifySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!verificationCode.trim()) {
+      alert('인증코드를 입력해 주세요.');
+      return;
+    }
+
+    try {
+      // 1. Cognito 인증코드 확인
+      await cognitoConfirmSignUp(formData.userId, verificationCode.trim());
+
+      // 2. 백엔드 DB 동기화
+      await apiClient.post('/api/auth/signup', {
+        cognito_sub: registeredSub,
+        userId: formData.userId,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone
+      });
+
+      alert('🎉 회원가입 및 이메일 인증이 완료되었습니다! 로그인해 주세요.');
+      navigate('/login');
+    } catch (error) {
+      console.error(error);
+      let errMsg = '이메일 인증 처리 중 오류가 발생했습니다.';
+      if (error instanceof Error) {
+        errMsg = error.message;
+      }
+      alert(`인증 실패: ${errMsg}`);
+    }
+  };
+
+  const handleResendCode = async () => {
+    setResending(true);
+    try {
+      await cognitoResendConfirmationCode(formData.userId);
+      alert('📩 인증코드가 이메일로 재전송되었습니다.');
+    } catch (error) {
+      console.error(error);
+      let errMsg = '인증코드 재전송 중 오류가 발생했습니다.';
+      if (error instanceof Error) {
+        errMsg = error.message;
+      }
+      alert(`재전송 실패: ${errMsg}`);
+    } finally {
+      setResending(false);
+    }
+  };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -115,21 +177,16 @@ export default function Signup() {
       if (!isMockMode()) {
         // ── Cognito 모드: Cognito User Pool에 회원가입 등록 ──
         const sub = await cognitoSignUp(
-          formData.userId, // 💡 Cognito Username으로 userId 전달로 수정됨!
+          formData.userId,
           formData.password,
           formData.email,
           formData.name,
           formData.phone
         );
 
-        // 백엔드 DB에 유저 정보 동기화
-        await apiClient.post('/api/auth/signup', {
-          cognito_sub: sub,
-          userId: formData.userId,
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone
-        });
+        setRegisteredSub(sub);
+        setIsVerifying(true);
+        alert('📩 입력하신 이메일로 인증 코드가 발송되었습니다. 인증 코드를 입력하여 가입을 완료해 주세요.');
       } else {
         // ── Mock 모드: 기존 백엔드 API 직접 호출 ──
         await apiClient.post('/api/auth/signup', {
@@ -139,10 +196,9 @@ export default function Signup() {
           email: formData.email,
           phone: formData.phone
         });
+        alert('🎉 회원가입이 성공적으로 완료되었습니다! 로그인해 주세요.');
+        navigate('/login');
       }
-
-      alert('🎉 회원가입이 성공적으로 완료되었습니다! 로그인해 주세요.');
-      navigate('/login');
     } catch (error) {
       console.error(error);
       let errMsg = '회원가입 처리 중 오류가 발생했습니다.';
@@ -176,60 +232,90 @@ export default function Signup() {
       <div className="auth-box wide">
         <div className="cont-inner">
           <div className="content-sub-box auth-box">
-            <p className="sub-tit">코레일 멤버십 회원이 되어 다양한 혜택을 누려보세요.</p>
-
-            <div className="login-box">
-              <form onSubmit={handleSubmit}>
-                <div className="input-row">
-                  <label>이름</label>
-                  <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="홍길동" required />
+            {isVerifying ? (
+              <>
+                <p className="sub-tit">📩 이메일 인증<br />입력하신 이메일({formData.email})로 전송된 6자리 인증 코드를 입력하세요.</p>
+                <div className="login-box">
+                  <form onSubmit={handleVerifySubmit}>
+                    <div className="input-row">
+                      <label htmlFor="verificationCode">인증 번호</label>
+                      <input
+                        type="text"
+                        id="verificationCode"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                        placeholder="6자리 인증 코드를 입력하세요"
+                        maxLength={6}
+                        required
+                      />
+                    </div>
+                    <div className="btn-group" style={{ marginTop: '20px' }}>
+                      <button type="button" className="btn-cancel" onClick={handleResendCode} disabled={resending}>
+                        {resending ? '재전송 중...' : '인증번호 재발송'}
+                      </button>
+                      <button type="submit" className="btn-ok">인증 완료</button>
+                    </div>
+                  </form>
                 </div>
+              </>
+            ) : (
+              <>
+                <p className="sub-tit">코레일 멤버십 회원이 되어 다양한 혜택을 누려보세요.</p>
 
-                <div className="input-row">
-                  <label>아이디</label>
-                  <div className="input-with-btn">
-                    <input type="text" name="userId" value={formData.userId} onChange={handleChange} placeholder="영문, 숫자 조합 6~15자" required />
-                    <button type="button" onClick={handleIdCheck}>중복확인</button>
-                  </div>
-                  {idMessage && (
-                    <p style={{ fontSize: '12px', marginTop: '6px', color: isIdValid ? '#27ae60' : '#e74c3c', fontWeight: 'bold' }}>
-                      {idMessage}
-                    </p>
-                  )}
-                </div>
+                <div className="login-box">
+                  <form onSubmit={handleSubmit}>
+                    <div className="input-row">
+                      <label>이름</label>
+                      <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="홍길동" required />
+                    </div>
 
-                <div className="input-row flex-row">
-                  <div className="col">
-                    <label>비밀번호</label>
-                    <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="비밀번호 입력" required />
-                  </div>
-                  <div className="col">
-                    <label>비밀번호 확인</label>
-                    <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="비밀번호 재입력" required />
-                  </div>
-                </div>
-                {passMsg.text && (
-                  <p style={{ fontSize: '12px', marginTop: '-12px', marginBottom: '16px', color: passMsg.color, fontWeight: 'bold' }}>
-                    {passMsg.text}
-                  </p>
-                )}
+                    <div className="input-row">
+                      <label>아이디</label>
+                      <div className="input-with-btn">
+                        <input type="text" name="userId" value={formData.userId} onChange={handleChange} placeholder="영문, 숫자 조합 6~15자" required />
+                        <button type="button" onClick={handleIdCheck}>중복확인</button>
+                      </div>
+                      {idMessage && (
+                        <p style={{ fontSize: '12px', marginTop: '6px', color: isIdValid ? '#27ae60' : '#e74c3c', fontWeight: 'bold' }}>
+                          {idMessage}
+                        </p>
+                      )}
+                    </div>
 
-                <div className="input-row">
-                  <label>이메일 주소</label>
-                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="example@korail.com" required />
-                </div>
+                    <div className="input-row flex-row">
+                      <div className="col">
+                        <label>비밀번호</label>
+                        <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="비밀번호 입력" required />
+                      </div>
+                      <div className="col">
+                        <label>비밀번호 확인</label>
+                        <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="비밀번호 재입력" required />
+                      </div>
+                    </div>
+                    {passMsg.text && (
+                      <p style={{ fontSize: '12px', marginTop: '-12px', marginBottom: '16px', color: passMsg.color, fontWeight: 'bold' }}>
+                        {passMsg.text}
+                      </p>
+                    )}
 
-                <div className="input-row mb-28">
-                  <label>휴대폰 번호</label>
-                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="010-0000-0000" required />
-                </div>
+                    <div className="input-row">
+                      <label>이메일 주소</label>
+                      <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="example@korail.com" required />
+                    </div>
 
-                <div className="btn-group">
-                  <button type="button" className="btn-cancel" onClick={() => navigate(-1)}>취소</button>
-                  <button type="submit" className="btn-ok">회원가입 완료</button>
+                    <div className="input-row mb-28">
+                      <label>휴대폰 번호</label>
+                      <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="010-0000-0000" required />
+                    </div>
+
+                    <div className="btn-group">
+                      <button type="button" className="btn-cancel" onClick={() => navigate(-1)}>취소</button>
+                      <button type="submit" className="btn-ok">회원가입 완료</button>
+                    </div>
+                  </form>
                 </div>
-              </form>
-            </div>
+              </>
+            )}
           </div>
         </div>
       </div>
