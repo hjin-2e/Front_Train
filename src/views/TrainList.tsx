@@ -226,11 +226,14 @@ export default function TrainList() {
           <h2>승차권 예매</h2>
         </div>
       </div>
+
       <div className="breadcrumb">
-        <div className="page-path">
-          <span className="ico-home"></span> 홈 &gt; 예매 &gt; 승차권 예매
+        <div className="page-path-list">
+          <div className="page-path">
+            <span className="ico-home"></span> 홈 &gt; 예매 &gt; 승차권 예매
+          </div>
+          <div className="print" title="인쇄" onClick={() => window.print()} style={{ cursor: 'pointer' }}></div>
         </div>
-        <div className="print" title="인쇄"></div>
       </div>
 
       <div className="cont-inner">

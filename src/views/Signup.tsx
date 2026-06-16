@@ -128,6 +128,15 @@ export default function Signup() {
         </div>
       </div>
 
+      <div className="breadcrumb">
+        <div className="page-path-list">
+          <div className="page-path">
+            <span className="ico-home"></span> 홈 &gt; 회원 &gt; 회원가입
+          </div>
+          <div className="print" title="인쇄" onClick={() => window.print()} style={{ cursor: 'pointer' }}></div>
+        </div>
+      </div>
+
       <div className="auth-box wide">
         <div className="cont-inner">
           <div className="content-sub-box auth-box">

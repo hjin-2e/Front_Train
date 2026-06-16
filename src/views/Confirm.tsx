@@ -114,6 +114,21 @@ export default function Confirm() {
   return (
     // 💡 content-box 대신 중앙 정렬을 위한 confirm-wrapper 클래스 적용
     <div className="sub-page confirm-wrapper">
+      <div className="sub-top">
+        <div className="page-title">
+          <h2>결제 및 예매 정보</h2>
+        </div>
+      </div>
+
+      <div className="breadcrumb">
+        <div className="page-path-list">
+          <div className="page-path">
+            <span className="ico-home"></span> 홈 &gt; 예매 &gt; 결제 및 예매 정보
+          </div>
+          <div className="print" title="인쇄" onClick={() => window.print()} style={{ cursor: 'pointer' }}></div>
+        </div>
+      </div>
+
       <div className="confirm-box">
         <h3 className="c-tit">결제 및 예매 정보 확인</h3>
 
@@ -126,13 +141,13 @@ export default function Confirm() {
           <div className="total-price">결제 금액: {totalPriceStr} (가상 결제)</div>
         </div>
 
-        <div className="btn-group" style={{ flexDirection: 'column', gap: '10px' }}>
+        <div className="btn-group" style={{ flexDirection: 'column'}}>
           {isProcessing ? (
             <div style={{ padding: '18px', backgroundColor: '#f8f9fa', borderRadius: '8px', color: '#0054a6', fontWeight: 'bold', fontSize: '16px', textAlign: 'center' }}>
               ⏳ {processStatus}
             </div>
           ) : (
-            <div style={{ display: 'flex', gap: '10px', width: '100%', justifyContent: 'center' }}>
+            <div className="btn-group">
               <button className="btn-prev" onClick={() => navigate('/trains', { state: data })}>이전으로</button>
               <button className="btn-pay" onClick={handlePayment}>발권하기</button>
             </div>

@@ -6,6 +6,7 @@ import Signup from './views/Signup';
 import TrainList from './views/TrainList';
 import Confirm from './views/Confirm';
 import Ticket from './views/Ticket';
+import MyTicket from './views/MyTicketList';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="trains" element={<TrainList />} />
           <Route path="confirm" element={<Confirm />} />
           <Route path="ticket" element={<Ticket />} />
+          <Route path="myticket" element={<MyTicket />} />
           
           {/* <Route path="tickets" element={<TicketPage />} /> */}
         </Route>
