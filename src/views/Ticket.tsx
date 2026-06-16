@@ -12,23 +12,20 @@ export default function Ticket() {
   const passengerCounts = data.passengerStr?.match(/\d+(?=명)/g);
   const totalPassengers = passengerCounts ? passengerCounts.reduce((acc: number, cur: string) => acc + parseInt(cur, 10), 0) : 1;
 
-  // 인원 수에 맞춰 좌석 번호 동적 생성 (예: 5호차 7A, 7B...)
-  const generateSeats = (count: number) => {
-    const carNum = Math.floor(Math.random() * 5) + 1; // 1~5호차
-    const startRow = Math.floor(Math.random() * 10) + 1; // 1~10열부터 시작
-    const seatLetters = ['A', 'B', 'C', 'D'];
+  // 멱등성(Purity)을 유지하기 위해 열차 번호를 시드로 사용하여 좌석 번호를 결정론적으로 계산 (Math.random 제거)
+  const trainNumber = parseInt(data.selectedTrain?.number || '101', 10) || 101;
+  const carNum = (trainNumber % 5) + 1; // 1~5호차
+  const startRow = ((trainNumber * 7) % 10) + 1; // 1~10열부터 시작
+  const seatLetters = ['A', 'B', 'C', 'D'];
 
-    const seatsList = [];
-    for (let i = 0; i < count; i++) {
-      const currentRow = startRow + Math.floor(i / 4);
-      const seatLetter = seatLetters[i % 4];
-      seatsList.push(`${currentRow}${seatLetter}`);
-    }
+  const seatsList = [];
+  for (let i = 0; i < totalPassengers; i++) {
+    const currentRow = startRow + Math.floor(i / 4);
+    const seatLetter = seatLetters[i % 4];
+    seatsList.push(`${currentRow}${seatLetter}`);
+  }
 
-    return `${carNum}호차 ${seatsList.join(', ')}석`;
-  };
-
-  const seatInfo = generateSeats(totalPassengers);
+  const seatInfo = `${carNum}호차 ${seatsList.join(', ')}석`;
 
   return (
     <div className="sub-page ticket-wrapper">

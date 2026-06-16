@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import apiClient from '../api/client';
 
 export default function Signup() {
@@ -63,6 +64,7 @@ export default function Signup() {
         setCheckedId(formData.userId); // 중복확인 완료 시점의 ID 고정
       }
     } catch (error) {
+      console.error(error);
       alert('서버 통신 오류가 발생했습니다. 다시 시도해 주세요.');
     }
   };
@@ -108,9 +110,12 @@ export default function Signup() {
 
       alert('🎉 회원가입이 성공적으로 완료되었습니다! 로그인해 주세요.');
       navigate('/login');
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      const errMsg = error.response?.data?.message || '회원가입 처리 중 오류가 발생했습니다.';
+      let errMsg = '회원가입 처리 중 오류가 발생했습니다.';
+      if (axios.isAxiosError(error)) {
+        errMsg = error.response?.data?.message || errMsg;
+      }
       alert(`회원가입 실패: ${errMsg}`);
     }
   };

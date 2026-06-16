@@ -20,10 +20,10 @@ const PassengerSelectModal: React.FC<PassengerSelectModalProps> = ({
   onApply,
   initialPassenger,
 }) => {
-  if (!isOpen) return null;
-
   // 모달 내부 임시 인원 상태 관리
   const [tempPassenger, setTempPassenger] = useState<PassengerType>({ ...initialPassenger });
+
+  if (!isOpen) return null;
 
   const updateCount = (type: keyof PassengerType, operation: 'plus' | 'minus') => {
     const currentTotal = tempPassenger.adult + tempPassenger.child + tempPassenger.infant + tempPassenger.senior;

@@ -68,7 +68,7 @@ export default function TrainList() {
   const getPassengerString = () => { 
     const labels: Record<string, string> = { adult: '어른', child: '어린이', infant: '유아', senior: '경로' };
     return Object.entries(passenger)
-      .filter(([_, count]) => count > 0)
+      .filter(([, count]) => count > 0)
       .map(([key, count]) => `${labels[key]} ${count}명`)
       .join(', ');
   };

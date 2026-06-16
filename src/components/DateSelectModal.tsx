@@ -22,8 +22,6 @@ const DateSelectModal: React.FC<DateSelectModalProps> = ({
   initialDay,
   initialHour,
 }) => {
-  if (!isOpen) return null;
-
   const today = new Date();
 
   // 모달 내부 임시 상태 관리
@@ -31,6 +29,8 @@ const DateSelectModal: React.FC<DateSelectModalProps> = ({
   const [tempMonth, setTempMonth] = useState<number>(initialMonth);
   const [tempDay, setTempDay] = useState<number>(initialDay);
   const [tempHour, setTempHour] = useState<number>(initialHour);
+
+  if (!isOpen) return null;
 
   const getDayOfWeek = (year: number, month: number, day: number) => {
     const days = ['일', '월', '화', '수', '목', '금', '토'];

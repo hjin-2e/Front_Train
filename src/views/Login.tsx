@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import apiClient from '../api/client';
 
 export default function Login() {
@@ -28,9 +29,12 @@ export default function Login() {
       const fromPath = location.state?.from || '/';
       const trainState = location.state?.trainState;
       navigate(fromPath, { state: trainState });
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      const errMsg = error.response?.data?.message || '로그인 중 오류가 발생했습니다.';
+      let errMsg = '로그인 중 오류가 발생했습니다.';
+      if (axios.isAxiosError(error)) {
+        errMsg = error.response?.data?.message || errMsg;
+      }
       alert(`로그인 실패: ${errMsg}`);
     }
   };
