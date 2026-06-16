@@ -43,9 +43,12 @@ export default function TicketView() {
         } else {
           setErrorMsg('유효한 승차권 정보가 존재하지 않습니다.');
         }
-      } catch (err: any) {
-        console.error('승차권 조회 실패:', err);
-        setErrorMsg(err.response?.data?.message || '승차권을 불러오는 중 오류가 발생했습니다.');
+      } catch (err) { //  타입 지정을 생략하면 기본적으로 unknown이 됩니다.
+				console.error('승차권 조회 실패:', err);
+				
+				// err 객체를 안전하게 단언하여 사용합니다.
+				const error = err as any; 
+				setErrorMsg(error.response?.data?.message || '승차권을 불러오는 중 오류가 발생했습니다.');
       } finally {
         setIsLoading(false);
       }
