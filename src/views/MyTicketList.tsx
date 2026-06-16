@@ -2,11 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import apiClient from '../api/client';
 
-interface Train {
-  id: string; type: string; number: string; depTime: string; arrTime: string;
-  duration: string; normalPrice: string; specialPrice: string; borderColor: string;
-}
-
 // 서버에서 받아올 실제 승차권(예약) 데이터 타입 정의
 interface TicketData {
   reservationId: string;
@@ -24,14 +19,9 @@ interface TicketData {
   totalPriceStr: string;
 }
 
-interface RouteState {
-  totalPriceStr?: string; // Confirm에서 바로 넘어왔을 때를 위한 대비
-}
-
 export default function TicketView() {
   const location = useLocation();
   const navigate = useNavigate();
-  const stateData = location.state as RouteState;
 
   // 상태 관리: 서버에서 받아온 승차권 정보 저장
   const [ticket, setTicket] = useState<TicketData | null>(null);
@@ -46,18 +36,12 @@ export default function TicketView() {
         const userId = localStorage.getItem('cognito_sub') || 'e9a6f3b0-4f51-4b7b-8c88-e9f06a1f81d1';
 
         // 2. 서버에 유저의 최신 예약/승차권 정보 GET 요청
-        // (API 엔드포인트는 백엔드 설계에 맞게 /api/reserve/current 등으로 조율하세요)
         const response = await apiClient.get(`/api/reserve?userId=${userId}`);
         
         if (response.data && response.data.ticket) {
           setTicket(response.data.ticket);
         } else {
-          // 만약 방금 결제하고 넘어온 state 내역이 있다면 fallback으로 활용 가능
-          if (location.state) {
-            // 필요 시 state 데이터를 ticket 형태로 가공해서 세팅
-          } else {
-            setErrorMsg('유효한 승차권 정보가 존재하지 않습니다.');
-          }
+          setErrorMsg('유효한 승차권 정보가 존재하지 않습니다.');
         }
       } catch (err: any) {
         console.error('승차권 조회 실패:', err);
@@ -73,78 +57,78 @@ export default function TicketView() {
   // 로딩 중 화면
   if (isLoading) {
     return (
-			<div className="sub-page">
-				<div className="sub-top">
-					<div className="page-title">
-						<h2>승차권 조회</h2>
-					</div>
-				</div>
+      <div className="sub-page">
+        <div className="sub-top">
+          <div className="page-title">
+            <h2>승차권 조회</h2>
+          </div>
+        </div>
 
-				<div className="breadcrumb">
-					<div className="page-path-list">
-						<div className="page-path">
-							<span className="ico-home"></span> 홈 &gt; 예매 &gt; 승차권 조회
-						</div>
-						<div className="print" title="인쇄" onClick={() => window.print()} style={{ cursor: 'pointer' }}></div>
-					</div>
-				</div>
+        <div className="breadcrumb">
+          <div className="page-path-list">
+            <div className="page-path">
+              <span className="ico-home"></span> 홈 &gt; 예매 &gt; 승차권 조회
+            </div>
+            <div className="print" title="인쇄" onClick={() => window.print()} style={{ cursor: 'pointer' }}></div>
+          </div>
+        </div>
 
-				<div className="cont-inner">
-					<div className="content-sub-box">
-						<p className="sub-tit">나의 모바일 승차권</p>
-						<div className="ticket-list">
-							<div className="ticket-info">
-								<h2 className="ticket-itxt">⏳ 승차권 정보를 조회하고 있습니다...</h2>
-							</div>
-						</div>
-						
-						<div className="btn-group">
-							<button className="btn-home" onClick={() => navigate('/')}>
-								홈으로 가기
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
+        <div className="cont-inner">
+          <div className="content-sub-box">
+            <p className="sub-tit">나의 모바일 승차권</p>
+            <div className="ticket-list">
+              <div className="ticket-info">
+                <h2 className="ticket-itxt">⏳ 승차권 정보를 조회하고 있습니다...</h2>
+              </div>
+            </div>
+            
+            <div className="btn-group">
+              <button className="btn-home" onClick={() => navigate('/')}>
+                홈으로 가기
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 
   // 에러 발생 또는 데이터 없음
   if (errorMsg || !ticket) {
     return (
-			<div className="sub-page">
-				<div className="sub-top">
-					<div className="page-title">
-						<h2>승차권 조회</h2>
-					</div>
-				</div>
+      <div className="sub-page">
+        <div className="sub-top">
+          <div className="page-title">
+            <h2>승차권 조회</h2>
+          </div>
+        </div>
 
-				<div className="breadcrumb">
-					<div className="page-path-list">
-						<div className="page-path">
-							<span className="ico-home"></span> 홈 &gt; 예매 &gt; 승차권 조회
-						</div>
-						<div className="print" title="인쇄" onClick={() => window.print()} style={{ cursor: 'pointer' }}></div>
-					</div>
-				</div>
+        <div className="breadcrumb">
+          <div className="page-path-list">
+            <div className="page-path">
+              <span className="ico-home"></span> 홈 &gt; 예매 &gt; 승차권 조회
+            </div>
+            <div className="print" title="인쇄" onClick={() => window.print()} style={{ cursor: 'pointer' }}></div>
+          </div>
+        </div>
 
-				<div className="cont-inner">
-					<div className="content-sub-box">
-						<p className="sub-tit">나의 모바일 승차권</p>
-						<div className="ticket-list">
-							<div className="ticket-info">
-								<h2 className="ticket-itxt err">{errorMsg || '조회된 승차권이 없습니다.'}</h2>
-							</div>
-						</div>
-						
-						<div className="btn-group">
-							<button className="btn-home" onClick={() => navigate('/')}>
-								홈으로 가기
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
+        <div className="cont-inner">
+          <div className="content-sub-box">
+            <p className="sub-tit">나의 모바일 승차권</p>
+            <div className="ticket-list">
+              <div className="ticket-info">
+                <h2 className="ticket-itxt err">{errorMsg || '조회된 승차권이 없습니다.'}</h2>
+              </div>
+            </div>
+            
+            <div className="btn-group">
+              <button className="btn-home" onClick={() => navigate('/')}>
+                홈으로 가기
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -157,39 +141,38 @@ export default function TicketView() {
       </div>
 
       <div className="breadcrumb">
-				<div className="page-path-list">
-					<div className="page-path">
-						<span className="ico-home"></span> 홈 &gt; 예매 &gt; 승차권 조회
-					</div>
-					<div className="print" title="인쇄" onClick={() => window.print()} style={{ cursor: 'pointer' }}></div>
-				</div>
+        <div className="page-path-list">
+          <div className="page-path">
+            <span className="ico-home"></span> 홈 &gt; 예매 &gt; 승차권 조회
+          </div>
+          <div className="print" title="인쇄" onClick={() => window.print()} style={{ cursor: 'pointer' }}></div>
+        </div>
       </div>
 
       <div className="cont-inner">
         <div className="content-sub-box">
           <p className="sub-tit">나의 모바일 승차권</p>
           <div className="ticket-list">
-						<div className="ticket-info">
-							{/* 예약 번호 표시로 신뢰성 강조 */}
-							<div style={{ fontSize: '14px', color: '#666', marginBottom: '15px', borderBottom: '1px dashed #ccc', paddingBottom: '10px' }}>
-								<strong>발권 번호:</strong> {ticket.reservationId}
-							</div>
+            <div className="ticket-info">
+              <div style={{ fontSize: '14px', color: '#666', marginBottom: '15px', borderBottom: '1px dashed #ccc', paddingBottom: '10px' }}>
+                <strong>발권 번호:</strong> {ticket.reservationId}
+              </div>
 
-							<ul className="c-info">
-								<li><strong>구간 정보:</strong> {ticket.startStation} ➔ {ticket.endStation}</li>
-								<li><strong>출발 일시:</strong> {ticket.selectedYear || 2026}년 {ticket.selectedMonth}월 {ticket.selectedDay}일 {ticket.depTime}</li>
-								<li><strong>이용 열차:</strong> {ticket.trainType} 제 {ticket.trainNumber}열차</li>
-								<li><strong>선택 좌석:</strong> {ticket.seatType}</li>
-								<li><strong>승차 인원:</strong> {ticket.passengerStr} (총 {ticket.totalPassengers}명)</li>
-							</ul>
-						</div>
+              <ul className="c-info">
+                <li><strong>구간 정보:</strong> {ticket.startStation} ➔ {ticket.endStation}</li>
+                <li><strong>출발 일시:</strong> {ticket.selectedYear || 2026}년 {ticket.selectedMonth}월 {ticket.selectedDay}일 {ticket.depTime}</li>
+                <li><strong>이용 열차:</strong> {ticket.trainType} 제 {ticket.trainNumber}열차</li>
+                <li><strong>선택 좌석:</strong> {ticket.seatType}</li>
+                <li><strong>승차 인원:</strong> {ticket.passengerStr} (총 {ticket.totalPassengers}명)</li>
+              </ul>
+            </div>
           </div>
           
           <div className="btn-group">
-						<button className="btn-home" onClick={() => navigate('/')}>
-							홈으로 가기
-						</button>
-					</div>
+            <button className="btn-home" onClick={() => navigate('/')}>
+              홈으로 가기
+            </button>
+          </div>
         </div>
       </div>
     </div>
