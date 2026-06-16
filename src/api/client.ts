@@ -1,11 +1,20 @@
 import axios from 'axios';
 
-// 환경변수에서 백엔드 주소를 가져옵니다. 
-// 없으면 로컬 주소(http://localhost:8080)를 기본값으로 사용합니다.
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
+// 💡 [방어 코드] 프로토콜(http:// 또는 https://)이 누락된 도메인일 경우, 자동으로 https:// 를 붙여 절대 경로로 변환
+let finalBaseUrl = API_BASE_URL.trim();
+if (
+  finalBaseUrl &&
+  !finalBaseUrl.startsWith('http://') &&
+  !finalBaseUrl.startsWith('https://') &&
+  !finalBaseUrl.startsWith('/')
+) {
+  finalBaseUrl = `https://${finalBaseUrl}`;
+}
+
 export const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: finalBaseUrl,
   withCredentials: true, // CORS 환경에서 쿠키/세션 전송에 필수
   headers: {
     'Content-Type': 'application/json',
