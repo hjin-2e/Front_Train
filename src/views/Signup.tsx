@@ -119,7 +119,7 @@ export default function Signup() {
       if (!isMockMode()) {
         // ── Cognito 모드: Cognito User Pool에 회원가입 등록 ──
         const sub = await cognitoSignUp(
-          formData.userId,
+          formData.email, // Cognito Username으로 email 전달
           formData.password,
           formData.email,
           formData.name,

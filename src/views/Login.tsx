@@ -27,7 +27,19 @@ export default function Login() {
     try {
       if (!isMockMode()) {
         // ── Cognito 모드: SDK로 직접 인증 → 실제 JWT 획득 ──
-        const result = await cognitoLogin(userId, password);
+        let loginUsername = userId;
+
+        // 입력한 아이디가 이메일 형식이 아닌 경우 백엔드에서 등록된 이메일 조회
+        if (!userId.includes('@')) {
+          try {
+            const lookupRes = await apiClient.get(`/api/auth/lookup?userId=${userId}`);
+            loginUsername = lookupRes.data.email;
+          } catch {
+            throw new Error('가입되지 않은 사용자 번호/아이디입니다.');
+          }
+        }
+
+        const result = await cognitoLogin(loginUsername, password);
 
         // 실제 JWT와 유저 정보 저장
         localStorage.setItem('cognito_id_token', result.idToken);
