@@ -21,48 +21,95 @@ export default function Login() {
       });
   }, []);
 
+  const handleMockLogin = async () => {
+    const response = await apiClient.post('/api/auth/login', {
+      userId,
+      password
+    });
+
+    const { cognito_sub, name } = response.data;
+
+    localStorage.setItem('cognito_sub', cognito_sub);
+    localStorage.setItem('user_name', name);
+
+    alert(`🎉 ${name}님, 환영합니다! 로그인이 완료되었습니다.`);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       if (!isMockMode()) {
-        // ── Cognito 모드: 백엔드 lookup 없이 바로 아이디(userId)로 SDK 로그인 ──
-        console.log("🔍 [Cognito Login Debug] userId:", userId);
-
-        // 💡 이메일 조회 로직 삭제 -> 곧바로 userId 전달
-        const result = await cognitoLogin(userId, password);
-
-        // 실제 JWT와 유저 정보 저장
-        localStorage.setItem('cognito_id_token', result.idToken);
-        localStorage.setItem('cognito_sub', result.sub);
-        localStorage.setItem('user_name', result.name);
-
-        // 백엔드 DB에 유저 정보 동기화 (최초 로그인 시 DB에 없을 수 있으므로)
         try {
-          await apiClient.post('/api/auth/signup', {
-            cognito_sub: result.sub,
-            email: result.email,
-            name: result.name,
-            userId: userId // 일반 아이디 동기화용 추가
-          });
-        } catch {
-          // 이미 등록된 유저면 무시
+          // ── Cognito 모드: 아이디 → 이메일 변환 후 Cognito SDK 로그인 ──
+          // Cognito User Pool이 username_attributes=["email"]로 설정되어 있으므로
+          // 반드시 이메일 형식으로 로그인해야 합니다.
+          let loginEmail = userId;
+
+          // 이메일 형식이 아닌 경우(@가 없으면) → 백엔드 lookup API로 이메일 조회
+          if (!userId.includes('@')) {
+            try {
+              const lookupRes = await apiClient.get('/api/auth/lookup', { params: { userId } });
+              loginEmail = lookupRes.data.email;
+            } catch (lookupErr) {
+              console.warn("이메일 조회 실패. 서버 모드 전환 여부를 확인합니다.", lookupErr);
+              const newConfig = await fetchCognitoConfig(true);
+              if (newConfig.mockMode) {
+                console.log("서버가 DR(Mock) 모드로 전환됨이 감지되었습니다. 일반 로그인을 시도합니다.");
+                await handleMockLogin();
+                
+                const fromPath = location.state?.from || '/';
+                const trainState = location.state?.trainState;
+                navigate(fromPath, { state: trainState });
+                return;
+              }
+              alert('가입되지 않은 아이디입니다.');
+              return;
+            }
+          }
+
+          console.log("🔍 [Cognito Login] 로그인 이메일:", loginEmail);
+          const result = await cognitoLogin(loginEmail, password);
+
+          // 실제 JWT와 유저 정보 저장
+          localStorage.setItem('cognito_id_token', result.idToken);
+          localStorage.setItem('cognito_sub', result.sub);
+          localStorage.setItem('user_name', result.name);
+
+          // 백엔드 DB에 유저 정보 동기화 (최초 로그인 시 DB에 없을 수 있으므로)
+          try {
+            await apiClient.post('/api/auth/signup', {
+              cognito_sub: result.sub,
+              email: result.email,
+              name: result.name,
+              userId: userId // 일반 아이디 동기화용 추가
+            });
+          } catch {
+            // 이미 등록된 유저면 무시
+          }
+
+          alert(`🎉 ${result.name}님, 환영합니다! 로그인이 완료되었습니다.`);
+        } catch (cognitoErr) {
+          console.warn("Cognito 로그인 중 에러 발생. 최신 서버 구성을 다시 점검합니다:", cognitoErr);
+          
+          // 백엔드로부터 최신 서버 설정을 동적으로 재확인
+          const newConfig = await fetchCognitoConfig(true);
+          
+          if (newConfig.mockMode) {
+            console.log("서버가 DR(Mock) 모드로 전환됨이 감지되었습니다. 일반 로그인을 시도합니다.");
+            await handleMockLogin();
+            
+            const fromPath = location.state?.from || '/';
+            const trainState = location.state?.trainState;
+            navigate(fromPath, { state: trainState });
+            return;
+          }
+          
+          // 진짜 로그인 에러인 경우 상위 catch로 던져 에러 팝업 발생시킴
+          throw cognitoErr;
         }
-
-        alert(`🎉 ${result.name}님, 환영합니다! 로그인이 완료되었습니다.`);
       } else {
-        // ── Mock 모드: 기존 백엔드 API 호출 ──
-        const response = await apiClient.post('/api/auth/login', {
-          userId,
-          password
-        });
-
-        const { cognito_sub, name } = response.data;
-
-        localStorage.setItem('cognito_sub', cognito_sub);
-        localStorage.setItem('user_name', name);
-
-        alert(`🎉 ${name}님, 환영합니다! 로그인이 완료되었습니다.`);
+        await handleMockLogin();
       }
 
       // 이전 페이지(예: 예매 화면) 및 여정 상태가 존재하면 복원 이동하고, 없으면 메인(/)으로 이동

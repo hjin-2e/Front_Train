@@ -53,7 +53,7 @@ export default function Signup() {
 
     try {
       // 1. Cognito 인증코드 확인
-      await cognitoConfirmSignUp(formData.userId, verificationCode.trim());
+      await cognitoConfirmSignUp(formData.email, verificationCode.trim());
 
       // 2. 백엔드 DB 동기화
       await apiClient.post('/api/auth/signup', {
@@ -79,7 +79,7 @@ export default function Signup() {
   const handleResendCode = async () => {
     setResending(true);
     try {
-      await cognitoResendConfirmationCode(formData.userId);
+      await cognitoResendConfirmationCode(formData.email);
       alert('📩 인증코드가 이메일로 재전송되었습니다.');
     } catch (error) {
       console.error(error);
@@ -167,6 +167,13 @@ export default function Signup() {
       return;
     }
 
+    // Cognito 비밀번호 정책 검증 (8자 이상 + 대/소문자 + 숫자 + 특수문자)
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+    if (!isMockMode() && !passwordRegex.test(formData.password)) {
+      alert('비밀번호는 8자 이상이며, 대문자/소문자/숫자/특수문자를 모두 포함해야 합니다.');
+      return;
+    }
+
     // 아이디 중복확인 필수 체크 장치
     if (!isIdChecked || formData.userId !== checkedId) {
       alert('아이디 중복확인을 완료해 주세요.');
@@ -176,8 +183,10 @@ export default function Signup() {
     try {
       if (!isMockMode()) {
         // ── Cognito 모드: Cognito User Pool에 회원가입 등록 ──
+        // Cognito User Pool이 username_attributes=["email"]로 설정되어 있으므로
+        // username에 email을 전달해야 합니다.
         const sub = await cognitoSignUp(
-          formData.userId,
+          formData.email,
           formData.password,
           formData.email,
           formData.name,

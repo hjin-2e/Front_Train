@@ -19,20 +19,22 @@ let userPool: CognitoUserPool | null = null;
 
 /**
  * 백엔드 /api/auth/config 에서 Cognito 설정을 가져와 캐싱합니다.
- * 이미 캐시가 있으면 재요청하지 않습니다.
+ * forceRefresh가 true이면 캐시를 건너뛰고 강제 조회합니다.
  */
-export async function fetchCognitoConfig(): Promise<CognitoConfig> {
-  if (cachedConfig) return cachedConfig;
+export async function fetchCognitoConfig(forceRefresh: boolean = false): Promise<CognitoConfig> {
+  if (!forceRefresh && cachedConfig) return cachedConfig;
 
   const res = await apiClient.get('/api/auth/config');
   cachedConfig = res.data as CognitoConfig;
 
-  // Cognito 모드일 때 UserPool 초기화
+  // Cognito 모드일 때 UserPool 초기화, Mock 모드일 때 해제
   if (!cachedConfig.mockMode && cachedConfig.userPoolId && cachedConfig.clientId) {
     userPool = new CognitoUserPool({
       UserPoolId: cachedConfig.userPoolId,
       ClientId: cachedConfig.clientId,
     });
+  } else {
+    userPool = null;
   }
 
   return cachedConfig;
