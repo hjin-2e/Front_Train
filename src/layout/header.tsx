@@ -54,8 +54,8 @@ const Header = () => {
           </div>
         </div>
         <div className={`header-nav ${isHovered || activeMenu !== null ? "current" : ""}`}
-          nter={() => setIsHovered(true)}
-          eave={() => setIsHovered(false)}>
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}>
           <div className="header-inner nav-inner">
             <h1 className="logo"><Link to="/" aria-label="코레일 승차권예매 메인페이지로 이동"></Link></h1>
             <nav>
@@ -98,7 +98,7 @@ const Header = () => {
                               <a href="#" className="gnb_dep3_open" title="">비회원서비스</a>
                               <div className="gnb_dep3_list">
                                 <ul>
-                                  <li><a href="#" className="gnb_dep4" title="">승차권 확인</a></li>
+                                  <li><Link to="/ticketInfo" className="gnb_dep4" title="">승차권 확인</Link></li>
                                   <li><a href="#" className="gnb_dep4" title="">이용내역/영수증 조회</a></li>
                                   <li><a href="#" className="gnb_dep4" title="">지연료 계좌반환</a></li>
                                   <li><a href="#" className="gnb_dep4" title="">외부플랫폼 영수증 출력</a></li>

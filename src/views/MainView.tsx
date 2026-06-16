@@ -147,7 +147,7 @@ const MainView: React.FC = () => {
                 <ul>
                   <li><a href="/trains">승차권 예매</a></li>
                   {/* <li><a href="https://www.korail.com//ticket/myticket/list" target="_blank">승차권 확인</a></li> */}
-                  <li><a href="/TicketInfo">예약승차권 조회/취소</a></li>
+                  <li><a href="/ticketInfo">예약승차권 조회/취소</a></li>
                   <li><a href="https://www.korail.com//ticket/guest/csc/korailcs">고객센터</a></li>
                   <li><a href="https://www.korail.com//ticket/reserve/guide/faq">자주찾는 질문(FAQ)</a></li>
                   <li><a href="https://www.korail.com//ticket/reserve/guide/pay">승차권 환불 위약금</a></li>
