@@ -15,7 +15,9 @@ export const apiClient = axios.create({
 // 요청 인터셉터: 로컬 스토리지에 로그인 정보가 존재할 경우 Authorization 헤더로 자동 부착
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('cognito_sub');
+    // Cognito 실 JWT 우선, 없으면 Mock용 cognito_sub 폴백
+    const token = localStorage.getItem('cognito_id_token')
+                || localStorage.getItem('cognito_sub');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

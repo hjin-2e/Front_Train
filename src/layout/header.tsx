@@ -11,6 +11,7 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('cognito_sub');
+    localStorage.removeItem('cognito_id_token');
     localStorage.removeItem('user_name');
     alert('로그아웃 되었습니다.');
     navigate('/');

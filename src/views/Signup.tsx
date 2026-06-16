@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import apiClient from '../api/client';
+import { fetchCognitoConfig, isMockMode, cognitoSignUp } from '../api/cognitoAuth';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -13,6 +14,17 @@ export default function Signup() {
     email: '',
     phone: ''
   });
+  const [configLoaded, setConfigLoaded] = useState<boolean>(false);
+
+  // Cognito 설정 로드
+  useEffect(() => {
+    fetchCognitoConfig()
+      .then(() => setConfigLoaded(true))
+      .catch((err) => {
+        console.warn('Cognito 설정 로드 실패 (Mock 모드로 진행):', err);
+        setConfigLoaded(true);
+      });
+  }, []);
 
   // 💡 유효성 검사 및 실시간 메시지 관리를 위한 상태 추가
   const [isIdChecked, setIsIdChecked] = useState<boolean>(false); // 중복확인 완료 여부
@@ -86,6 +98,11 @@ export default function Signup() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!configLoaded) {
+      alert('Cognito 설정을 로드하는 중입니다. 잠시 후 다시 시도해 주세요.');
+      return;
+    }
+
     // 비밀번호 체크
     if (formData.password !== formData.confirmPassword) {
       alert('비밀번호가 일치하지 않습니다. 다시 확인해 주세요.');
@@ -99,20 +116,43 @@ export default function Signup() {
     }
 
     try {
-      // 백엔드 회원가입 API 호출
-      await apiClient.post('/api/auth/signup', {
-        userId: formData.userId,
-        password: formData.password,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone
-      });
+      if (!isMockMode()) {
+        // ── Cognito 모드: Cognito User Pool에 회원가입 등록 ──
+        const sub = await cognitoSignUp(
+          formData.userId,
+          formData.password,
+          formData.email,
+          formData.name,
+          formData.phone
+        );
+
+        // 백엔드 DB에 유저 정보 동기화
+        await apiClient.post('/api/auth/signup', {
+          cognito_sub: sub,
+          userId: formData.userId,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone
+        });
+      } else {
+        // ── Mock 모드: 기존 백엔드 API 직접 호출 ──
+        await apiClient.post('/api/auth/signup', {
+          userId: formData.userId,
+          password: formData.password,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone
+        });
+      }
 
       alert('🎉 회원가입이 성공적으로 완료되었습니다! 로그인해 주세요.');
       navigate('/login');
     } catch (error) {
       console.error(error);
       let errMsg = '회원가입 처리 중 오류가 발생했습니다.';
+      if (error instanceof Error) {
+        errMsg = error.message;
+      }
       if (axios.isAxiosError(error)) {
         errMsg = error.response?.data?.message || errMsg;
       }
