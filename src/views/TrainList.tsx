@@ -118,14 +118,14 @@ export default function TrainList() {
 
   // 6. 더미 데이터 및 로고 핸들러
   const dummyTrains: Train[] = [
-    { id: '1', type: 'KTX', number: '001', depTime: '09:13', arrTime: '11:50', duration: '2시간 37분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
-    { id: '2', type: 'KTX', number: '161', depTime: '09:50', arrTime: '12:48', duration: '2시간 58분', normalPrice: '53,900원', specialPrice: '75,500원', borderColor: '#0054a6' },
-    { id: '3', type: 'KTX', number: '003', depTime: '10:10', arrTime: '12:59', duration: '2시간 49분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
-    { id: '4', type: 'ITX-새마을', number: '1001', depTime: '11:20', arrTime: '16:40', duration: '5시간 20분', normalPrice: '42,600원', specialPrice: '59,600원', borderColor: '#0081b3' },
-    { id: '5', type: 'KTX', number: '005', depTime: '12:05', arrTime: '14:50', duration: '2시간 45분', normalPrice: '59,400원', specialPrice: '83,200원', borderColor: '#0054a6' },
-    { id: '6', type: 'KTX-산천', number: '075', depTime: '13:15', arrTime: '16:01', duration: '2시간 46분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
-    { id: '7', type: 'ITX-새마을', number: '1003', depTime: '14:40', arrTime: '19:53', duration: '5시간 13분', normalPrice: '42,600원', specialPrice: '59,600원', borderColor: '#0081b3' },
-    { id: '8', type: '무궁화호', number: '1151', depTime: '15:30', arrTime: '21:04', duration: '5시간 34분', normalPrice: '28,600원', specialPrice: '40,000원', borderColor: '#ff6600' }
+    { id: '1', type: 'KTX', number: '001', depTime: '08:12', arrTime: '10:49', duration: '2시간 37분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
+    { id: '2', type: 'KTX-산천', number: '075', depTime: '09:37', arrTime: '12:23', duration: '2시간 46분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
+    { id: '3', type: 'KTX', number: '003', depTime: '11:08', arrTime: '13:57', duration: '2시간 49분', normalPrice: '59,800원', specialPrice: '83,700원', borderColor: '#0054a6' },
+    { id: '4', type: 'ITX-새마을', number: '1001', depTime: '12:23', arrTime: '17:43', duration: '5시간 20분', normalPrice: '42,600원', specialPrice: '59,600원', borderColor: '#0081b3' },
+    { id: '5', type: '무궁화호', number: '1151', depTime: '14:02', arrTime: '19:36', duration: '5시간 34분', normalPrice: '28,600원', specialPrice: '40,000원', borderColor: '#ff6600' },
+    { id: '6', type: 'KTX', number: '161', depTime: '15:38', arrTime: '18:36', duration: '2시간 58분', normalPrice: '53,900원', specialPrice: '75,500원', borderColor: '#0054a6' },
+    { id: '7', type: 'ITX-새마을', number: '1003', depTime: '17:14', arrTime: '22:27', duration: '5시간 13분', normalPrice: '42,600원', specialPrice: '59,600원', borderColor: '#0081b3' },
+    { id: '8', type: 'KTX', number: '005', depTime: '18:47', arrTime: '21:32', duration: '2시간 45분', normalPrice: '59,400원', specialPrice: '83,200원', borderColor: '#0054a6' }
   ];
 
   const getStationCode = (krName: string) => {
@@ -140,9 +140,9 @@ export default function TrainList() {
   const getActualTrainId = (dummyId: string) => {
     const dateStr = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
     const baseId = parseInt(dummyId, 10);
-    if (dateStr === '2026-06-26') return String(baseId);
-    if (dateStr === '2026-06-27') return String(baseId + 8);
-    if (dateStr === '2026-06-28') return String(baseId + 16);
+    if (dateStr === '2026-06-19') return String(baseId);
+    if (dateStr === '2026-06-20') return String(baseId + 8);
+    if (dateStr === '2026-06-21') return String(baseId + 16);
     return null; // DB에 데이터가 없는 그 외의 날짜는 null 반환
   };
 
