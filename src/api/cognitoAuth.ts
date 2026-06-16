@@ -114,14 +114,18 @@ export function cognitoSignUp(
     ];
 
     if (phone) {
-      // Cognito는 전화번호가 E.164 형식(+821012345678)이어야 합니다.
       const cleaned = phone.replace(/\D/g, '');
       let formattedPhone = cleaned;
+
+      // 1. '010'으로 시작하는 경우 -> '8210...' 으로 변환
       if (cleaned.startsWith('0')) {
-        formattedPhone = '+82' + cleaned.slice(1);
-      } else if (!cleaned.startsWith('+')) {
-        formattedPhone = '+' + cleaned;
+        formattedPhone = '82' + cleaned.slice(1);
       }
+
+      // 2. Cognito는 보통 앞에 '+'를 붙여서 E.164를 완성함
+      formattedPhone = '+' + formattedPhone;
+
+      console.log("✅ Cognito로 보내는 최종 번호:", formattedPhone);
       attributes.push(new CognitoUserAttribute({ Name: 'phone_number', Value: formattedPhone }));
     }
 
