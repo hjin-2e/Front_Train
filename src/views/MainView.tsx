@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade } from 'swiper/modules';
+import { Autoplay, EffectFade, Navigation } from 'swiper/modules';
 import apiClient from '../api/client';
 
 // 공통 팝업페이지
@@ -11,6 +11,8 @@ import PassengerSelectModal from '../components/PassengerSelectModal';
 
 import 'swiper/css';
 import 'swiper/css/effect-fade';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 export interface PassengerType {
   adult: number;
@@ -143,14 +145,14 @@ const MainView: React.FC = () => {
               </div>
               <div className="myPage">
                 <ul>
-                  <li><a href="/ticket/search/general">승차권 예매</a></li>
-                  <li><a href="/ticket/myticket/list">승차권 확인</a></li>
-                  <li><a href="/ticket/reservation/list">예약승차권 조회/취소</a></li>
-                  <li><a href="/ticket/guest/csc/korailcs">고객센터</a></li>
-                  <li><a href="/ticket/reserve/guide/faq">자주찾는 질문(FAQ)</a></li>
-                  <li><a href="/ticket/reserve/guide/pay">승차권 환불 위약금</a></li>
-                  <li><a href="/ticket/train/trainGuide/etiquette">열차 내 물품 휴대 기준</a></li>
-                  <li><a href="/ticket/membership/certify">예약보관금 반환접수</a></li>
+                  <li><a href="/trains">승차권 예매</a></li>
+                  {/* <li><a href="https://www.korail.com//ticket/myticket/list" target="_blank">승차권 확인</a></li>
+                  <li><a href="https://www.korail.com//ticket/reservation/list">예약승차권 조회/취소</a></li> */}
+                  <li><a href="https://www.korail.com//ticket/guest/csc/korailcs">고객센터</a></li>
+                  <li><a href="https://www.korail.com//ticket/reserve/guide/faq">자주찾는 질문(FAQ)</a></li>
+                  <li><a href="https://www.korail.com//ticket/reserve/guide/pay">승차권 환불 위약금</a></li>
+                  <li><a href="https://www.korail.com//ticket/train/trainGuide/etiquette">열차 내 물품 휴대 기준</a></li>
+                  <li><a href="https://www.korail.com//ticket/membership/certify">예약보관금 반환접수</a></li>
                 </ul>
               </div>
             </div>
@@ -204,22 +206,24 @@ const MainView: React.FC = () => {
           <h2 className="tit">코레일은 <strong>다양한 할인상품</strong>으로 고객에게 다가가고 있습니다.</h2>
           <div className="cont-inner">
             <Swiper
+              modules={[Navigation]} 
               slidesPerView={5}
               spaceBetween={30}
               loop={true}
-              pagination={{ clickable: true }}
               navigation={true}
               className="slideSwiper pdt-list"
             >
-              <SwiperSlide><a href="https://www.korail.com/ticket/discountSystem/internet">인터넷 특가</a></SwiperSlide>
-              <SwiperSlide><a href="https://www.korail.com/ticket/discountSystem/discount">공공할인</a></SwiperSlide>
-              <SwiperSlide><a href="https://www.korail.com/ticket/discountSystem/childern">다자녀 행복</a></SwiperSlide>
-              <SwiperSlide><a href="https://www.korail.com/ticket/discountSystem/KTX">맘편한 KTX</a></SwiperSlide>
-              <SwiperSlide><a href="https://www.korail.com/ticket/discountSystem/cheerUp">힘내라 청춘</a></SwiperSlide>
-              <SwiperSlide><a href="https://www.korail.com/ticket/discountSystem/youth">청소년 드림</a></SwiperSlide>
-              <SwiperSlide><a href="https://www.korail.com/ticket/discountSystem/child">영업할인 공통안내</a></SwiperSlide>
-              <SwiperSlide><a href="https://www.korail.com/ticket/discountSystem/4people">4인동반석</a></SwiperSlide>
-              <SwiperSlide><a href="https://www.korail.com/ticket/discountSystem/Ncard2">N카드(KTX,새마을)</a></SwiperSlide>
+              {[...Array(2)].flatMap((_, i) => [
+                <SwiperSlide key={`slide-1-${i}`}><a href="https://www.korail.com/ticket/discountSystem/internet">인터넷 특가</a></SwiperSlide>,
+                <SwiperSlide key={`slide-2-${i}`}><a href="https://www.korail.com/ticket/discountSystem/discount">공공할인</a></SwiperSlide>,
+                <SwiperSlide key={`slide-3-${i}`}><a href="https://www.korail.com/ticket/discountSystem/childern">다자녀 행복</a></SwiperSlide>,
+                <SwiperSlide key={`slide-4-${i}`}><a href="https://www.korail.com/ticket/discountSystem/KTX">맘편한 KTX</a></SwiperSlide>,
+                <SwiperSlide key={`slide-5-${i}`}><a href="https://www.korail.com/ticket/discountSystem/cheerUp">힘내라 청춘</a></SwiperSlide>,
+                <SwiperSlide key={`slide-6-${i}`}><a href="https://www.korail.com/ticket/discountSystem/youth">청소년 드림</a></SwiperSlide>,
+                <SwiperSlide key={`slide-7-${i}`}><a href="https://www.korail.com/ticket/discountSystem/child">영업할인 공통안내</a></SwiperSlide>,
+                <SwiperSlide key={`slide-8-${i}`}><a href="https://www.korail.com/ticket/discountSystem/4people">4인동반석</a></SwiperSlide>,
+                <SwiperSlide key={`slide-9-${i}`}><a href="https://www.korail.com/ticket/discountSystem/Ncard2">N카드(KTX,새마을)</a></SwiperSlide>
+              ])}
             </Swiper>
           </div>
         </section>

@@ -55,7 +55,7 @@
           ul {
             background: var(--white-color);
             border-radius: 16px;
-            padding: 20px 24px;
+            padding: 30px 24px;
             box-shadow: 0 0 0 rgba(0, 0, 0, 0.24), 0 0 0 rgba(0, 0, 0, 0.2), 0 4px 4px rgba(0, 0, 0, 0.16) !important;
             li {
               a {
@@ -217,6 +217,7 @@
 // 컨텐츠 영역
 .contents-wrap {
     position: relative;
+    overflow: hidden;
     padding-top:50px;
     .tit {
         color:var(--black-color);
@@ -231,7 +232,7 @@
       margin: 30px auto 0;
       overflow: inherit;
       .swiper-wrapper {
-        overflow: hidden;
+        // overflow: hidden;
         .swiper-slide {
           display: flex;
           justify-content: center;
@@ -246,16 +247,9 @@
                 line-height: 1;
             }
         }
-      }
-      .swiper-button-next {
-        z-index: 5;
-        right: calc(100%/50 - 90px) !important;
-      }
-      .swiper-button-prev {
-        z-index: 5;
-        left: calc(100%/50 - 90px) !important;
-      }
+      } 
       .swiper-button-next, .swiper-button-prev {
+        position: absolute;
         width: 36px;
         height: 36px;
         padding: 9px 0;
@@ -286,6 +280,14 @@
         width: calc(100% /5);
         height: 100%;
         background-color: var(--white-color);
+      }
+      .swiper-button-next {
+        z-index: 5;
+        right: calc(100%/50 - 90px) !important;
+      }
+      .swiper-button-prev {
+        z-index: 5;
+        left: calc(100%/50 - 90px) !important;
       }
     }
     
