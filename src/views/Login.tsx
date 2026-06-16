@@ -39,6 +39,7 @@ export default function Login() {
           }
         }
 
+        console.log("🔍 [Cognito Login Debug] userId:", userId, "loginUsername:", loginUsername);
         const result = await cognitoLogin(loginUsername, password);
 
         // 실제 JWT와 유저 정보 저장
