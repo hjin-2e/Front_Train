@@ -484,10 +484,9 @@
       padding: 40px 30px; 
     }
     .sub-tit {
-      color: #111;
+      color: var(--black-color); 
       font-size: 24px;
       font-weight: bold;
-
     }
 
     // 로그인 박스
@@ -628,7 +627,7 @@
     border-bottom-left-radius: 8px;
   }
   .ticket-itxt {
-    color:#111;
+    color:var(--black-color); 
     font-size:18px;
     font-weight:bold;
     &.err {
@@ -640,6 +639,42 @@
     align-items: center;
     padding: 20px 30px;
     min-height: 280px;
+  }
+}
+
+.info-box {
+  .info-txt {
+    color:var(--black-color); 
+    font-size:14px;
+    margin-top: 10px;
+    padding: 20px 0;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .info-list {
+    margin-top: 20px;
+    width:100%;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 60px 0;
+    .inpt-box {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 30px;
+      span {
+        color:var(--black-color);
+        font-size:18px;
+        font-weight: 400;
+      }
+      input {
+        color:var(--black-color);
+        font-size: 18px;
+        padding: 10px 0;
+        width: 420px;
+        border-bottom: 1px solid #ccc;
+      }
+    }
   }
 }
 
@@ -971,9 +1006,9 @@
       .route-tit { 
         font-size: 22px; 
         font-weight: bold; 
-        color: #111; 
+        color: var(--black-color); 
         .time { 
-          color: #111; 
+          color: var(--black-color); 
           margin-left: 8px; 
         } 
       } 
@@ -1009,7 +1044,7 @@
         .s-prc { 
           font-size: 18px; 
           font-weight: bold; 
-          color: #111; 
+          color: var(--black-color); 
           &.special {
             color: #e1a107; 
           } 
@@ -1044,13 +1079,13 @@
 }
 
 /* 결제 확인 (Confirm) */
-.confirm-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 100px); /* 화면 중앙에 오도록 높이 계산 */
-  padding: 40px 20px;
-}
+// .confirm-wrapper {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   min-height: calc(100vh - 100px); /* 화면 중앙에 오도록 높이 계산 */
+//   padding: 40px 20px;
+// }
 
 .confirm-box {
   background-color: var(--white-color); 
@@ -1059,6 +1094,7 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
   width: 100%;
   max-width: 700px; /* 기존 550px -> 700px 창 크기 확대 */
+  margin: 0 auto;
 
   .c-tit { 
     margin: 0 0 24px 0; 
@@ -1140,7 +1176,7 @@
       span.st { 
         font-size: 24px; 
         font-weight: bold; 
-        color: #111; 
+        color: var(--black-color); 
       } 
       span.tm { 
         font-size: 18px; 
@@ -1246,7 +1282,7 @@
     margin: 0; 
     font-size: 21px; 
     font-weight: bold; 
-    color: #111; 
+    color: var(--black-color); 
   }
   .btn-close { 
     display: block;
@@ -1407,7 +1443,7 @@
     position: relative;
     height:40px; 
     cursor: pointer; 
-    color: #111;
+    color: var(--black-color); 
     padding:4px 0;
     border: 1px solid #f0f0f0; 
     .sel-box { 
@@ -1450,7 +1486,7 @@
     font-size: 18px; 
     font-weight: bold; 
     margin-bottom: 12px; 
-    color: #111; 
+    color: var(--black-color); 
   }
   .track-wrap {
     display: flex; 
@@ -1479,7 +1515,7 @@
         border-radius: 20px; 
         border: 1px solid #ccc; 
         background-color: var(--white-color); 
-        color: #111; 
+        color: var(--black-color); 
         font-size: 16px; 
         white-space: nowrap; 
         cursor: pointer; 

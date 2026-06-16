@@ -495,28 +495,56 @@ h1.logo > a {
     padding: 14px 0; 
     border-radius: 4px; 
     cursor: pointer; 
-    font-size: 15px; 
+    font-size: 16px;
+    font-weight: 400; 
   } 
   .btn-prev { 
     flex: 1; 
     border: 1px solid #ccc; 
-    background-color: var(--white-color); 
+    background-color: var(--white-color);
+    &:hover, &:active {
+      color: var(--white-color);
+      border: 1px solid var(--common-color); 
+      background-color: var(--common-color);
+    } 
   } 
   .btn-pay { 
     flex: 2; 
-    border: none; 
-    background-color: var(--common-color); 
     color: var(--white-color); 
     font-weight: bold; 
+    border: 1px solid var(--common-color); 
+    background-color: var(--common-color); 
+    &:hover, &:active {
+      color: var(--common-color);
+      border: 1px solid var(--common-color); 
+      background-color: var(--white-color);
+    }
   } 
   .btn-home {
     color:#FFF;
-    font-size: 16px;
-    font-weight: 400;
-    padding:12px 24px;
     cursor: pointer;
-    border-radius: 4px;
+    padding: 10px 30px;
+    border-radius: 46px;
+    border: 1px solid #6c757d;;
     background-color: #6c757d;
+    &:hover, &:active {
+      color: #6c757d;
+      border: 1px solid #6c757d;;
+      background-color: var(--white-color);
+    }
+  }
+
+  // 비회원 승차권 조회버튼
+  .btn-apply {
+    color: #0054a6;
+    padding: 10px 30px;
+    border-radius: 46px;
+    border: 1px solid #0054a6;
+    background-color: var(--white-color);  
+    &:hover, &:active {
+      color: var(--white-color);
+      background-color: #0054a6;
+    }
   }
 }
 

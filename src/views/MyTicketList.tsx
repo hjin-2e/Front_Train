@@ -157,9 +157,9 @@ export default function TicketView() {
           <p className="sub-tit">나의 모바일 승차권</p>
           <div className="ticket-list">
             <div className="ticket-info">
-              <div style={{ fontSize: '14px', color: '#666', marginBottom: '15px', borderBottom: '1px dashed #ccc', paddingBottom: '10px' }}>
+              <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px', borderBottom: '1px dashed #ccc', paddingBottom: '10px' }}>
                 <strong>발권 번호:</strong> {ticket.reservationId}
-              </div>
+              </p>
 
               <ul className="c-info">
                 <li><strong>구간 정보:</strong> {ticket.startStation} ➔ {ticket.endStation}</li>
