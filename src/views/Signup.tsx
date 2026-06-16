@@ -27,8 +27,8 @@ export default function Signup() {
   }, []);
 
   // 💡 유효성 검사 및 실시간 메시지 관리를 위한 상태 추가
-  const [isIdChecked, setIsIdChecked] = useState<boolean>(false); // 중복확인 완료 여부
-  const [checkedId, setCheckedId] = useState<string>(''); // 중복확인 통과한 아이디 저장
+  const [isIdChecked, setIsIdChecked] = useState<boolean>(false);
+  const [checkedId, setCheckedId] = useState<string>('');
   const [idMessage, setIdMessage] = useState<string>('');
   const [isIdValid, setIsIdValid] = useState<boolean>(false);
 
@@ -58,10 +58,6 @@ export default function Signup() {
     }
 
     try {
-      // 가상 데이터 또는 실제 apiClient를 활용한 비동기 중복체크
-      // const response = await apiClient.get(`/api/auth/check-id?userId=${formData.userId}`);
-      // const isDuplicated = response.data.isDuplicated;
-
       // 테스트용 가상 조건 (admin 기가입 처리 예시)
       const isDuplicated = formData.userId === 'admin' || formData.userId === 'korail123';
 
@@ -119,7 +115,7 @@ export default function Signup() {
       if (!isMockMode()) {
         // ── Cognito 모드: Cognito User Pool에 회원가입 등록 ──
         const sub = await cognitoSignUp(
-          formData.email, // Cognito Username으로 email 전달
+          formData.userId, // 💡 Cognito Username으로 userId 전달로 수정됨!
           formData.password,
           formData.email,
           formData.name,
@@ -193,10 +189,8 @@ export default function Signup() {
                   <label>아이디</label>
                   <div className="input-with-btn">
                     <input type="text" name="userId" value={formData.userId} onChange={handleChange} placeholder="영문, 숫자 조합 6~15자" required />
-                    {/* 💡 중복확인 버튼 스크립트 연결 */}
                     <button type="button" onClick={handleIdCheck}>중복확인</button>
                   </div>
-                  {/* 💡 아이디 중복여부 메시지 출력 */}
                   {idMessage && (
                     <p style={{ fontSize: '12px', marginTop: '6px', color: isIdValid ? '#27ae60' : '#e74c3c', fontWeight: 'bold' }}>
                       {idMessage}
@@ -214,7 +208,6 @@ export default function Signup() {
                     <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="비밀번호 재입력" required />
                   </div>
                 </div>
-                {/* 💡 비밀번호 일치여부 실시간 피드백 텍스트 UI 추가 */}
                 {passMsg.text && (
                   <p style={{ fontSize: '12px', marginTop: '-12px', marginBottom: '16px', color: passMsg.color, fontWeight: 'bold' }}>
                     {passMsg.text}
@@ -232,7 +225,7 @@ export default function Signup() {
                 </div>
 
                 <div className="btn-group">
-                  <button type="button" className="btn-cancel">취소</button>
+                  <button type="button" className="btn-cancel" onClick={() => navigate(-1)}>취소</button>
                   <button type="submit" className="btn-ok">회원가입 완료</button>
                 </div>
               </form>

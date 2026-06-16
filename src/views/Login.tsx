@@ -26,21 +26,11 @@ export default function Login() {
 
     try {
       if (!isMockMode()) {
-        // ── Cognito 모드: SDK로 직접 인증 → 실제 JWT 획득 ──
-        let loginUsername = userId;
+        // ── Cognito 모드: 백엔드 lookup 없이 바로 아이디(userId)로 SDK 로그인 ──
+        console.log("🔍 [Cognito Login Debug] userId:", userId);
 
-        // 입력한 아이디가 이메일 형식이 아닌 경우 백엔드에서 등록된 이메일 조회
-        if (!userId.includes('@')) {
-          try {
-            const lookupRes = await apiClient.get(`/api/auth/lookup?userId=${userId}`);
-            loginUsername = lookupRes.data.email;
-          } catch {
-            throw new Error('가입되지 않은 사용자 번호/아이디입니다.');
-          }
-        }
-
-        console.log("🔍 [Cognito Login Debug] userId:", userId, "loginUsername:", loginUsername);
-        const result = await cognitoLogin(loginUsername, password);
+        // 💡 이메일 조회 로직 삭제 -> 곧바로 userId 전달
+        const result = await cognitoLogin(userId, password);
 
         // 실제 JWT와 유저 정보 저장
         localStorage.setItem('cognito_id_token', result.idToken);
@@ -53,6 +43,7 @@ export default function Login() {
             cognito_sub: result.sub,
             email: result.email,
             name: result.name,
+            userId: userId // 일반 아이디 동기화용 추가
           });
         } catch {
           // 이미 등록된 유저면 무시
@@ -118,11 +109,11 @@ export default function Login() {
           <div className="print" title="인쇄" onClick={() => window.print()} style={{ cursor: 'pointer' }}></div>
         </div>
       </div>
-      
+
       <div className="cont-inner">
         <div className="content-sub-box auth-box">
           <p className="sub-tit">코레일멤버십<br />회원번호로 로그인하세요.</p>
-          
+
           <div className="login-box">
             <form onSubmit={handleSubmit}>
               <div className="input-row">
