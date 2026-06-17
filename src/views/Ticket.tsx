@@ -29,41 +29,64 @@ export default function Ticket() {
 
   return (
     <div className="sub-page ticket-wrapper">
+      <div className="sub-top">
+        <div className="page-title">
+          <h2>승차권 조회</h2>
+        </div>
+      </div>
+
+      <div className="breadcrumb">
+        <div className="page-path-list">
+          <div className="page-path">
+            <span className="ico-home"></span> 홈 &gt; 예매 &gt; 승차권 발권
+          </div>
+          <div 
+            className="print" 
+            title="인쇄" 
+            onClick={() => window.print()} 
+            style={{ cursor: 'pointer' }}
+          ></div>
+        </div>
+      </div>
+
       {/* 💡 방금 SCSS에서 수정한 겹치지 않는 이름으로 변경 */}
-      <div className="digital-ticket-box">
-
-        <div className="ticket-header">
-          <h4>KORAIL 디지털 승차권</h4>
-        </div>
-
-        <div className="ticket-body">
-          <div className="t-route-box">
-            <div className="station">
-              <span className="lbl">출발</span>
-              <span className="st">{data.startStation}</span>
-              <span className="tm blue">{data.selectedTrain?.depTime}</span>
+      <div className="cont-inner">
+        <div className="content-sub-box">
+          <div className="digital-ticket-box">
+            <div className="ticket-header">
+              <h4>KORAIL 디지털 승차권</h4>
             </div>
-            <div className="arr">➔</div>
-            <div className="station">
-              <span className="lbl">도착</span>
-              <span className="st">{data.endStation}</span>
-              <span className="tm">{data.selectedTrain?.arrTime}</span>
+
+            <div className="ticket-body">
+              <div className="t-route-box">
+                <div className="station">
+                  <span className="lbl">출발</span>
+                  <span className="st">{data.startStation}</span>
+                  <span className="tm blue">{data.selectedTrain?.depTime}</span>
+                </div>
+                <div className="arr">➔</div>
+                <div className="station">
+                  <span className="lbl">도착</span>
+                  <span className="st">{data.endStation}</span>
+                  <span className="tm">{data.selectedTrain?.arrTime}</span>
+                </div>
+              </div>
+
+              <div className="t-detail-box">
+                <div>• <strong>열차 종류:</strong> {data.selectedTrain?.type} (제 {data.selectedTrain?.number}열차)</div>
+                <div>• <strong>좌석 정보:</strong> {seatInfo} ({data.selectedSeatType} · 자동 임의배정 완료)</div>
+                <div>• <strong>이용 인원:</strong> {data.passengerStr}</div>
+              </div>
+
+              <div className="t-barcode">
+                <div></div>
+              </div>
+
+              <button className="btn-ok" onClick={() => navigate('/')}>확인 (홈으로 이동)</button>
             </div>
           </div>
 
-          <div className="t-detail-box">
-            <div>• <strong>열차 종류:</strong> {data.selectedTrain?.type} (제 {data.selectedTrain?.number}열차)</div>
-            <div>• <strong>좌석 정보:</strong> {seatInfo} ({data.selectedSeatType} · 자동 임의배정 완료)</div>
-            <div>• <strong>이용 인원:</strong> {data.passengerStr}</div>
-          </div>
-
-          <div className="t-barcode">
-            <div></div>
-          </div>
-
-          <button className="btn-ok" onClick={() => navigate('/')}>확인 (홈으로 이동)</button>
         </div>
-
       </div>
     </div>
   );
