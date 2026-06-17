@@ -636,9 +636,23 @@
   }
   .ticket-info {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
     padding: 20px 30px;
     min-height: 280px;
+    .t-info-txt {
+      width:100%;
+      display: block;
+      font-size:18px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .c-info {
+      li {
+        margin: 10px 0 5px;
+        font-size:16px;
+      }
+    }
   }
 }
 
