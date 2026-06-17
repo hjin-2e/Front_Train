@@ -70,9 +70,10 @@ export default function Confirm() {
       // Worker가 SQS 큐를 처리하여 DB에 저장할 시간을 줍니다 (1.5초)
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // 2. 예약 확정 (결제 완료) 요청 - 아직 DB 저장 전일 수 있으므로 최대 3회 폴링
+      // 2. 예약 확정 (결제 완료) 요청 - 아직 DB 저장 전일 수 있으므로 최대 6회 폴링
       let confirmSuccess = false;
-      for (let i = 0; i < 3; i++) {
+      const maxRetries = 6;
+      for (let i = 0; i < maxRetries; i++) {
         try {
           await apiClient.post('/api/reserve/confirm', {
             userId,
@@ -84,7 +85,7 @@ export default function Confirm() {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           if (err.response?.status === 400 && err.response.data?.message?.includes('처리 중')) {
-            setProcessStatus(`서버 처리 지연... 재시도 중 (${i + 1}/3)`);
+            setProcessStatus(`서버 처리 지연... 재시도 중 (${i + 1}/${maxRetries})`);
             await new Promise(resolve => setTimeout(resolve, 1500));
           } else {
             throw err; // 그 외 에러는 즉시 중단 (예: 만료, 중복)
