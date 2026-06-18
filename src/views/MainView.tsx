@@ -203,7 +203,7 @@ const MainView: React.FC = () => {
       {/* 컨텐츠 영역 */}
       <div className="contents-wrap">
         <section>
-          <h2 className="tit">코레일은 <strong>다양한 할인상품</strong>으로 고객에게 다가가고 있습니다.</h2>
+          <h2 className="tit">코레일은 <strong>다양한 할인상품</strong>으로 고객에게 다가가고 있습니다! v2</h2>
           <div className="cont-inner">
             <Swiper
               modules={[Navigation]}
