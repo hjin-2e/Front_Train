@@ -29,26 +29,61 @@ export default function TicketView() {
   const [errorMsg, setErrorMsg] = useState<string>('');
 
   useEffect(() => {
+    // 1. location.state를 통해 비회원 조회 데이터(ticketData)가 전달되었는지 확인
+    if (location.state && location.state.ticketData) {
+      const rawData = location.state.ticketData;
+
+      // 이미 가공된 구조인 경우
+      if (rawData.ticket) {
+        setTicket(rawData.ticket);
+        setIsLoading(false);
+      } else if (rawData.reservation_uuid) {
+        // 비회원 단건 조회 DB Row 데이터를 TicketData 인터페이스 형태로 매핑
+        const depDateStr = rawData.departure_date ? String(rawData.departure_date).slice(0, 10) : '';
+        const [yearStr, monthStr, dayStr] = depDateStr.split('-');
+
+        const mappedTicket: TicketData = {
+          reservationId: rawData.reservation_uuid,
+          startStation: rawData.start_station,
+          endStation: rawData.end_station,
+          selectedYear: parseInt(yearStr, 10) || 2026,
+          selectedMonth: parseInt(monthStr, 10) || 6,
+          selectedDay: parseInt(dayStr, 10) || 19,
+          depTime: rawData.departure_time,
+          trainType: 'KTX',
+          trainNumber: rawData.train_number,
+          seatType: '일반실',
+          passengerStr: `어른 ${rawData.passenger_count}명`,
+          totalPassengers: rawData.passenger_count,
+          totalPriceStr: `${(rawData.passenger_count * 59800).toLocaleString()}원`
+        };
+        setTicket(mappedTicket);
+        setIsLoading(false);
+      } else {
+        setErrorMsg('유효한 승차권 정보가 존재하지 않습니다.');
+        setIsLoading(false);
+      }
+      return;
+    }
+
     const fetchTicketData = async () => {
       try {
         setIsLoading(true);
-        // 1. 유저 식별자 가져오기
+        // 2. 유저 식별자 가져오기
         const userId = localStorage.getItem('cognito_sub') || 'e9a6f3b0-4f51-4b7b-8c88-e9f06a1f81d1';
 
-        // 2. 서버에 유저의 최신 예약/승차권 정보 GET 요청
+        // 3. 서버에 유저의 최신 예약/승차권 정보 GET 요청
         const response = await apiClient.get(`/api/reserve?userId=${userId}`);
-        
+
         if (response.data && response.data.ticket) {
           setTicket(response.data.ticket);
         } else {
           setErrorMsg('유효한 승차권 정보가 존재하지 않습니다.');
         }
-      } catch (err) { //  타입 지정을 생략하면 기본적으로 unknown이 됩니다.
-				console.error('승차권 조회 실패:', err);
-				
-				// err 객체를 안전하게 단언하여 사용합니다.
-				const error = err as any; 
-				setErrorMsg(error.response?.data?.message || '승차권을 불러오는 중 오류가 발생했습니다.');
+      } catch (err) {
+        console.error('승차권 조회 실패:', err);
+        const error = err as any;
+        setErrorMsg(error.response?.data?.message || '승차권을 불러오는 중 오류가 발생했습니다.');
       } finally {
         setIsLoading(false);
       }
@@ -84,7 +119,7 @@ export default function TicketView() {
                 <h2 className="ticket-itxt">⏳ 승차권 정보를 조회하고 있습니다...</h2>
               </div>
             </div>
-            
+
             <div className="btn-group">
               <button className="btn-home" onClick={() => navigate('/')}>
                 홈으로 가기
@@ -123,7 +158,7 @@ export default function TicketView() {
                 <h2 className="ticket-itxt err">{errorMsg || '조회된 승차권이 없습니다.'}</h2>
               </div>
             </div>
-            
+
             <div className="btn-group">
               <button className="btn-home" onClick={() => navigate('/')}>
                 홈으로 가기
@@ -170,7 +205,7 @@ export default function TicketView() {
               </ul>
             </div>
           </div>
-          
+
           <div className="btn-group">
             <button className="btn-home" onClick={() => navigate('/')}>
               홈으로 가기
