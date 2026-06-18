@@ -47,7 +47,7 @@ const Header = () => {
                   <li><Link to="/login">로그인</Link></li>
                 )}
                 <li><a href="">장바구니</a></li>
-                <li><a href="">마이페이지</a></li>
+                <li><Link to={cognitoSub ? "/myticket" : "/login"}>마이페이지</Link></li>
                 <li><a href="">고객센터</a></li>
                 <li><a href="">기업전용</a></li>
               </ul>
@@ -71,7 +71,7 @@ const Header = () => {
                         </div>
                         <div className="gnb_depth2_list">
                           <ul>
-                            <li><a href="#" className="gnb_dep3" title="">승차권 확인</a></li>
+                            <li><Link to={cognitoSub ? "/myticket" : "/login"} className="gnb_dep3">승차권 확인</Link></li>
                             <li>
                               <a href="#" className="gnb_dep3_open" title="">예매</a>
                               <div className="gnb_dep3_list">
