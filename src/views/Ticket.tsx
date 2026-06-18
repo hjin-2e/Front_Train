@@ -1,6 +1,46 @@
 
 import { useLocation, useNavigate } from 'react-router-dom';
 
+// 총 탑승 인원에 따른 연석 배정 좌석 목록 생성기 (MyTicketList & Ticket 연동)
+function generateSeatStr(reservationId: string, totalCount: number): string {
+  if (!reservationId || totalCount <= 0) return "5호차 12A석";
+  
+  // 1. UUID를 해싱하여 '대표 시작 위치'를 결정론적으로 계산
+  let hash = 0;
+  for (let i = 0; i < reservationId.length; i++) {
+    hash = reservationId.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  hash = Math.abs(hash);
+  
+  let carNumber = (hash % 12) + 1; // 1호차 ~ 12호차
+  let seatRow = (hash % 13) + 1;  // 1열 ~ 13열 (일인 증가 시 15열 초과 방지를 위해 여유있게 시작)
+  let colIndex = hash % 4;        // 0(A), 1(B), 2(C), 3(D)
+  const seatLetters = ['A', 'B', 'C', 'D'];
+  
+  const seats: string[] = [];
+  for (let i = 0; i < totalCount; i++) {
+    seats.push(`${carNumber}호차 ${seatRow}${seatLetters[colIndex]}`);
+    
+    // 옆자리로 이동
+    colIndex++;
+    if (colIndex > 3) {
+      colIndex = 0;
+      seatRow++; // A열로 넘어가며 다음 행으로 이동
+      
+      // 만약 한 호차의 최대 행(15열)을 넘어가면 다음 호차의 1열로 강제 이동 (에러 방지)
+      if (seatRow > 15) {
+        seatRow = 1;
+        carNumber++;
+        if (carNumber > 15) { // 15호차 초과 시 1호차로 순환
+          carNumber = 1;
+        }
+      }
+    }
+  }
+  
+  return seats.join(', ');
+}
+
 export default function Ticket() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -12,20 +52,8 @@ export default function Ticket() {
   const passengerCounts = data.passengerStr?.match(/\d+(?=명)/g);
   const totalPassengers = passengerCounts ? passengerCounts.reduce((acc: number, cur: string) => acc + parseInt(cur, 10), 0) : 1;
 
-  // 멱등성(Purity)을 유지하기 위해 열차 번호를 시드로 사용하여 좌석 번호를 결정론적으로 계산 (Math.random 제거)
-  const trainNumber = parseInt(data.selectedTrain?.number || '101', 10) || 101;
-  const carNum = (trainNumber % 5) + 1; // 1~5호차
-  const startRow = ((trainNumber * 7) % 10) + 1; // 1~10열부터 시작
-  const seatLetters = ['A', 'B', 'C', 'D'];
-
-  const seatsList = [];
-  for (let i = 0; i < totalPassengers; i++) {
-    const currentRow = startRow + Math.floor(i / 4);
-    const seatLetter = seatLetters[i % 4];
-    seatsList.push(`${currentRow}${seatLetter}`);
-  }
-
-  const seatInfo = `${carNum}호차 ${seatsList.join(', ')}석`;
+  // MyTicketList와 동일한 UUID 해시 기반 좌석 번호 매핑 (데이터 정합성 일치)
+  const seatInfo = generateSeatStr(data.reservationId, totalPassengers);
 
   return (
     <div className="sub-page ticket-wrapper">

@@ -644,6 +644,7 @@
       width:100%;
       display: block;
       font-size:18px;
+      padding-bottom:5px;
       margin-bottom: 10px;
       border-bottom: 1px solid #ddd;
     }
@@ -1140,18 +1141,19 @@
 }
 
 /* 승차권 (Ticket) */
-.ticket-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding-top: 160px; /* 기존 120px -> 160px로 여백을 늘려 화면을 조금 더 아래로 내림 */
-  padding-bottom: 80px;
-}
+// .ticket-wrapper {
+//   display: flex;
+//   justify-content: center;
+//   align-items: flex-start;
+//   min-height: 100vh;
+//   padding-top: 160px; /* 기존 120px -> 160px로 여백을 늘려 화면을 조금 더 아래로 내림 */
+//   padding-bottom: 80px;
+// }
 
 .digital-ticket-box {
   width: 100%;
   max-width: 420px; 
+  margin: 0 auto;
   box-shadow: 0 6px 16px rgba(0,0,0,0.1); 
   border-radius: 12px;
   overflow: hidden; /* 버튼이 꽉 찰 때 테두리 밖으로 삐져나가는 것을 예쁘게 잘라줌 */

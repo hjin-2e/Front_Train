@@ -20,6 +20,7 @@ export default function Confirm() {
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [processStatus, setProcessStatus] = useState<string>('');
+
   if (!data || !data.selectedTrain) {
     return <div style={{ padding: '20px', marginTop: '160px', textAlign: 'center' }}>선택된 여정 정보가 없습니다.</div>;
   }
@@ -99,14 +100,20 @@ export default function Confirm() {
 
       setProcessStatus('결제 완료! 승차권 화면으로 이동합니다.');
       setTimeout(() => {
-        navigate('/ticket', { state: { ...data, totalPriceStr } });
+        navigate('/ticket', { state: { ...data, totalPriceStr, reservationId } });
       }, 500);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(error);
       const errMsg = error.response?.data?.message || error.message || '서버 오류가 발생했습니다.';
-      alert(`예약 실패: ${errMsg}`);
+
+      // 재해 복구 모드(DR)인 경우 전용 안내 메시지 표시
+      if (error.response?.status === 403 && errMsg.includes('재해 복구')) {
+        alert('재해 복구 대기 모드\n\n현재 시스템이 DR(Disaster Recovery) 모드로 전환되어\n예매 및 결제 서비스를 일시 중단합니다.\n\n열차 조회 서비스는 계속 이용 가능합니다.');
+      } else {
+        alert(`예약 실패: ${errMsg}`);
+      }
       setIsProcessing(false);
       setProcessStatus('');
     }
@@ -142,7 +149,7 @@ export default function Confirm() {
           <div className="total-price">결제 금액: {totalPriceStr} (가상 결제)</div>
         </div>
 
-        <div className="btn-group" style={{ flexDirection: 'column'}}>
+        <div className="btn-group" style={{ flexDirection: 'column' }}>
           {isProcessing ? (
             <div style={{ padding: '18px', backgroundColor: '#f8f9fa', borderRadius: '8px', color: '#0054a6', fontWeight: 'bold', fontSize: '16px', textAlign: 'center' }}>
               ⏳ {processStatus}
