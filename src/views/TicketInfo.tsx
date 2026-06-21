@@ -46,7 +46,7 @@ export default function TicketView() {
       
       // any를 사용하지 않고 안전하게 Axios 에러 구조 분기 처리
       if (err instanceof Error) {
-        const axiosError = err as { response?: { data?: { message?: string } } };
+        const axiosError = err as Record<string, any>;
         setErrorMsg(axiosError.response?.data?.message || '승차권을 불러오는 중 오류가 발생했습니다.');
       } else {
         setErrorMsg('알 수 없는 오류가 발생했습니다.');

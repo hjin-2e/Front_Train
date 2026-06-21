@@ -5,7 +5,8 @@ export const IMAGES: Record<string, string> = Object.entries(imageModules).reduc
   (acc, [path, module]) => {
     // 경로에서 파일 이름만 추출 (예: './img/main.jpg' -> 'main.jpg')
     const fileName = path.split('/').pop() || '';
-    acc[fileName] = (module as { default: string }).default;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    acc[fileName] = (module as any).default;
     return acc;
   },
   {} as Record<string, string>
