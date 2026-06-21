@@ -83,9 +83,9 @@ export default function Confirm() {
           });
           confirmSuccess = true;
           break; // 성공 시 루프 탈출
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-          if (err.response?.status === 400 && err.response.data?.message?.includes('처리 중')) {
+        } catch (err) {
+          const error = err as { response?: { status?: number, data?: { message?: string } } };
+          if (error.response?.status === 400 && error.response.data?.message?.includes('처리 중')) {
             setProcessStatus(`서버 처리 지연... 재시도 중 (${i + 1}/${maxRetries})`);
             await new Promise(resolve => setTimeout(resolve, 1500));
           } else {
@@ -103,8 +103,8 @@ export default function Confirm() {
         navigate('/ticket', { state: { ...data, totalPriceStr, reservationId } });
       }, 500);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as { response?: { status?: number, data?: { message?: string } }, message?: string };
       console.error(error);
       const errMsg = error.response?.data?.message || error.message || '서버 오류가 발생했습니다.';
 

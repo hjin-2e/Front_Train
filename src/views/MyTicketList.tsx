@@ -125,7 +125,7 @@ export default function TicketView() {
         }
       } catch (err) {
         console.error('승차권 조회 실패:', err);
-        const error = err as any;
+        const error = err as { response?: { data?: { message?: string } } };
         setErrorMsg(error.response?.data?.message || '승차권을 불러오는 중 오류가 발생했습니다.');
       } finally {
         setIsLoading(false);
